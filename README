@@ -1,0 +1,53 @@
+A lightweight Python wrapper for PGAPack
+========================================
+
+CONTENTS
+
+./README
+  That's this file.
+./CHANGES
+  Contains version and release information.
+doc/
+  Contains documentation for using PyPGAPack.  The Python-specific API
+  is lightly documented, and the user is urged to read the PGAPack
+  documentation for more details.
+src/
+  Contains the sources and a simple setup.py for creating the 
+  Python module and associated documentation.  
+patch/
+  Contains a few patches for the PGAPack build system to enable building
+  a shared library and using C++.
+examples/
+  Contains several examples illustrating how powerful PGAPack is
+  and how nice it is to use Python to harness that power.
+
+INSTALLATION
+
+You *must* have a *shared* version of the PGAPack library installed.  You 
+can get the source from:
+
+  http://ftp.mcs.anl.gov/pub/pgapack/
+
+PGAPack requires a C compiler and can also be built with MPI.  On the
+other hand, PyPGAPack requires a C++ compiler.  I've only test with
+the GNU tool set.  See pypgapack/patch for patches to PGAPack to make
+this part of the build work.
+
+You *must* have Python installed with Numpy and distutils.  Assuming
+you have these, building and installing is easy:
+
+  >> cd src
+  >> python setup.py build --pga-include=/path/to/pga/header   \
+                           --pga-lib-path=/path/to/pga/lib     \
+                           --pga-lib=pgaO
+  >> python setup.py install
+
+For the build part, you're including the paths to the header and 
+library, *and* you're also giving the library name since PGA changes
+it's library name depending on optimization.  (And it's nice to have
+a serial and parallel build for testing)
+
+Thats it!  See the examples for use.
+
+
+
