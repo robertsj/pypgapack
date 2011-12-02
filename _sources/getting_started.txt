@@ -1,0 +1,111 @@
+.. _sec_getting_started:
+
+Getting Started With pypgapack
+==============================
+
+Background
+----------
+
+:mod:`pypgapack` is a Python wrapper for the parallel genetic 
+algorithm library pgapack, written in C by David Levine.  
+The source and documentation for pgapack can be found at
+`http://ftp.mcs.anl.gov/pub/pgapack/ <http://ftp.mcs.anl.gov/pub/pgapack/>`_.
+The motivation for wrapping the code is ultimately to support
+a class project aiming to optimize loading patterns of 
+nuclear reactor cores, which is a rather large and difficult
+combinatorial problem.  Lots of researchers have applied genetic algorithms
+(and many other algorithms) to the problem, and the class project
+aims to provide a flexible test bench in Python to investigate
+various ideas.  Wrapping pgapack is one step toward that goal.
+pgapAck was chose largely due to limited but positive past 
+experience with it.
+
+It should be pointed out that a similar effort to wrap pgapack
+in Python was made called ``pgapy`` (see `http://pgapy.sourceforge.net/ 
+<http://pgapy.sourceforge.net/>`_), but I actually couldn't get it
+to work, probably because I didn't know a thing about building
+Python modules before I started this (and my minimal C knowledge
+didn't help matters).  Hence, I decided to "roll my own" using 
+`SWIG <http://www.swig.org/>`_ in combination with a C++ wrapper
+around pgapack instead of interfacing directly with pgapack 
+as ``pgapy`` does.
+
+The :class:`PGA` class wraps almost all of pgapack's functionality,
+including allowing user functions for several operations (like
+initialization, crossover, etc.) for the :const:`PGA.DATATYPE_BINARY`, 
+:const:`PGA.DATATYPE_REAL` and :const:`PGA.DATATYPE_INTEGER` alleles.  
+No such support is currently offered for other allele types, 
+including user-specified types.  The intended way to use 
+:mod:`pypgapack` is to derive classes from :class:`PGA`, with 
+objective and other functions as members.
+
+Parallel functionality is supported with the help of 
+`mpi4py <http://mpi4py.scipy.org/>`_.
+
+.. note::
+
+   :mod:`pypgapack` is currently in beta mode, so there may be many
+   things that look wrapped but are not.  Testing is a future goal,
+   but not a priority---I need a grade!  Feedback is welcome.
+
+Building pypgapack
+------------------
+
+Included in ./pypgapack are the required source files and a simple script 
+``build_pypgapack`` which generates the Python module.  To build, do
+the following:
+
+#. Build PGAPack with the patches in ./patches.  The major difference is 
+   a slight change to allow use with C++.  The Makefile template also is
+   set to produce shared and static libraries.
+
+#. Modify the paths and variables in ``build_pypgapack`` below to suit 
+   your needs. 
+
+#. The source as distributed is set for serial.  To use in parallel, do
+   the following:
+  
+     * Uncomment ``PARALLEL`` in ``build_pypgapack``
+     * Set ``CXX`` to the appropriate compiler (e.g. mpic++) 
+       in ``build_pypgapack``
+     * Delete or move the dummy ``mpi.h`` included with PGAPack to avoid
+       redefinitions.  There's probably a better approach.
+     * This assumes PGAPack was built in parallel; if not, do so.  Refer to
+       the PGAPack documentation.  You need an MPI-enabled compiler.
+     * Get mpi4py (e.g. easy_install mpi4py). You need an MPI-enabled compiler.
+       Note, a few files from mpi4py are included in ./pypgapack/mpi4py.  These
+       *may* need to be updated.
+
+#. Execute ``build_pypgapack`` and set PYTHONPATH accordingly.
+
+
+Next Steps
+----------
+
+The user is encouraged to read the pgapack documentation thoroughly
+before using pypgapack, as the shared API is *not* covered in this
+documentation (and neither are the many PGAPack defaults).  It's 
+helpful to go through their examples in C/C++ or Fortran if you 
+know the languages.
+
+Thereafter, see the collection of :ref:`sec_examples`, which
+include several of the original pgapack examples along with a few additional
+ones that demonstrate how to use user-defined functions for a variety
+of operations.  Reference output is included, though don't expect
+to reproduce the numbers exactly for the small number of generations
+used, as they'll be sensitive to compilation, etc.
+
+For a quick refresher, the basic gist of genetic algorithms is 
+discussed briefly
+in :ref:`sec_methods`, which lists a few references that may
+be of use.
+
+Documentation for the relatively small number of additional methods
+not explicitly in pgapack can be found in the :ref:`sec_reference`.
+
+
+
+
+
+
+

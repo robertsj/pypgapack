@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API Reference &mdash; pypgapack 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pypgapack 0.1.0 documentation" href="index.html" />
+    <link rel="prev" title="Methods" href="methods.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="methods.html" title="Methods"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pypgapack 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="api-reference">
+<span id="sec-reference"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This section provides a reference for all functions
+defined in the <tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt> module that are <em>extensions</em> of the basic
+pgapack API.  All pgapack functions are contained in the
+<tt class="xref py py-class docutils literal"><span class="pre">pypgapack.PGA</span></tt> class.  The pgapack library is typically
+used as follows:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">double</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">PGAContext</span> <span class="o">*</span><span class="n">ctx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pop</span><span class="p">);</span>
+<span class="n">PGAContext</span> <span class="o">*</span><span class="n">ctx</span><span class="p">;</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">PGACreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">PGA_DATATYPE_BINARY</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">PGA_MAXIMIZE</span><span class="p">);</span>
+<span class="n">PGASetUp</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<span class="n">PGARun</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">);</span>
+<span class="n">PGADestroy</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">ctx</span></tt> object is created explicitly by the user and then passed as
+the first argument to all subsequent function calls, with function
+names taking the form <tt class="docutils literal"><span class="pre">PGAxxx</span></tt>.  For <tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt>, <tt class="docutils literal"><span class="pre">ctx</span></tt> is
+a <em>private</em> member of <a class="reference internal" href="#PGA" title="PGA"><tt class="xref py py-class docutils literal"><span class="pre">PGA</span></tt></a> created during construction, and all
+<a class="reference internal" href="#PGA" title="PGA"><tt class="xref py py-class docutils literal"><span class="pre">PGA</span></tt></a> members drop the <cite>PGA</cite> prefix and the initial
+<tt class="docutils literal"><span class="pre">ctx</span></tt> argument. So, for example,</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">ctx</span> <span class="o">=</span> <span class="n">PGACreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">PGA_DATATYPE_BINARY</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">PGA_MAXIMIZE</span><span class="p">);</span>
+<span class="n">PGASetUp</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>in C/C++ becomes</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">obj</span> <span class="o">=</span> <span class="n">pypgapack</span><span class="o">.</span><span class="n">PGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_BINARY</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">PGASetUp</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>in Python. For all functions included in pgapack, the user is directed to the
+pgapack documentation.  What follows is a description of the few new
+methods added for <tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt> that make life in Python a
+bit easier.</p>
+</div>
+<div class="section" id="pypgapack-api">
+<h2>pypgapack API<a class="headerlink" href="#pypgapack-api" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to see what <tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt> offers is to
+do the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pypgapack</span> <span class="kn">as</span> <span class="nn">pga</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">dir</span><span class="p">(</span><span class="n">pga</span><span class="p">)</span>
+<span class="go">[&#39;PGA&#39;, &#39;PGA_swigregister&#39;, &#39;__builtins__&#39;, &#39;__doc__&#39;, &#39;__file__&#39;,</span>
+<span class="go"> &#39;__name__&#39;, &#39;__package__&#39;, &#39;_newclass&#39;, &#39;_object&#39;, &#39;_pypgapack&#39;,</span>
+<span class="go"> &#39;_swig_getattr&#39;, &#39;_swig_property&#39;, &#39;_swig_repr&#39;, &#39;_swig_setattr&#39;,</span>
+<span class="go"> &#39;_swig_setattr_nondynamic&#39;]</span>
+</pre></div>
+</div>
+<p>This command works with any Python module.  Our interest is in the
+<a class="reference internal" href="#PGA" title="PGA"><tt class="xref py py-class docutils literal"><span class="pre">PGA</span></tt></a> class.  We do the same for this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">dir</span><span class="p">(</span><span class="n">pga</span><span class="o">.</span><span class="n">PGA</span><span class="p">)</span>
+<span class="go">[&#39;BinaryBuildDatatype&#39;, &#39;BinaryCopyString&#39;, &#39;BinaryCreateString&#39;,</span>
+<span class="go"> &#39;BinaryDuplicate&#39;, &#39;BinaryHammingDistance&#39;, &#39;BinaryInitString&#39;,</span>
+<span class="go"> &#39;BinaryMutation&#39;, &#39;BinaryOneptCrossover&#39;, &#39;BinaryPrint&#39;,</span>
+<span class="go"> &#39;BinaryPrintString&#39;, &#39;BinaryTwoptCrossover&#39;, &#39;BinaryUniformCrossover&#39;,...</span>
+</pre></div>
+</div>
+<p>and find a really long list of class members, most of which are
+directly from pgapack.  In the following, we document only those
+not included in pgapack, as use of the pgapack functionality is
+covered above (i.e. drop the <tt class="docutils literal"><span class="pre">ctx</span></tt> argument and <tt class="docutils literal"><span class="pre">PGA</span></tt> prefix).</p>
+<dl class="class">
+<dt id="PGA">
+<em class="property">class </em><tt class="descname">PGA</tt><a class="headerlink" href="#PGA" title="Permalink to this definition">¶</a></dt>
+<dd><p>PGA wrapper class.</p>
+<dl class="method">
+<dt id="PGA.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>argv</em>, <em>datatype</em>, <em>n</em>, <em>direction</em><big>)</big><a class="headerlink" href="#PGA.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the PGA context.  This essentially wraps the PGACreate
+function, so see the pgapack documentation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>argv</strong> &#8211; system argument</li>
+<li><strong>datatype</strong> &#8211; allele dataype; can be <tt class="xref py py-const docutils literal"><span class="pre">PGA.DATATYPE_XXX</span></tt>,
+where <tt class="docutils literal"><span class="pre">XXX</span></tt> is <tt class="docutils literal"><span class="pre">BINARY</span></tt>, <tt class="docutils literal"><span class="pre">INTEGER</span></tt>, and so on.</li>
+<li><strong>n</strong> &#8211; size of the unknown, i.e. number of alleles of type
+<tt class="docutils literal"><span class="pre">datatype</span></tt></li>
+<li><strong>direction</strong> &#8211; either <tt class="xref py py-const docutils literal"><span class="pre">PGA.MAXIMIZE</span></tt> or <tt class="xref py py-const docutils literal"><span class="pre">PGA.MINIMIZE</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="PGA.GetIntegerChromosome">
+<tt class="descname">GetIntegerChromosome</tt><big>(</big><em>p</em>, <em>pop</em><big>)</big><a class="headerlink" href="#PGA.GetIntegerChromosome" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get direct access to the <em>p</em>-th integer chromosome string in
+population <em>pop</em> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> &#8211; string index</li>
+<li><strong>pop</strong> &#8211; population index</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">string as numpy array of integers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="PGA.GetRealChromosome">
+<tt class="descname">GetRealChromosome</tt><big>(</big><em>p</em>, <em>pop</em><big>)</big><a class="headerlink" href="#PGA.GetRealChromosome" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get direct access to the <em>p</em>-th double chromosome string in population <em>pop</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> &#8211; string index</li>
+<li><strong>pop</strong> &#8211; population index</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">string as numpy array of floats</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="PGA.SetInitString">
+<tt class="descname">SetInitString</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#PGA.SetInitString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a function for initializing strings.  The function <tt class="docutils literal"><span class="pre">f</span></tt> provided
+<strong>must</strong> have the signature <tt class="docutils literal"><span class="pre">f(p,</span> <span class="pre">pop)</span></tt>, but should almost certainly
+be an inerited class member with the signature <tt class="docutils literal"><span class="pre">f(self,</span> <span class="pre">p,</span> <span class="pre">pop)</span></tt>.
+See pgapack documentation for more about user functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> &#8211; Python function</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="examples.html#sec-initstringexamples"><em>Example 4: User-defined String Initialization</em></a> for an example on string initialization.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="PGA.SetCrossover">
+<tt class="descname">SetCrossover</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#PGA.SetCrossover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a function for the crossover operation.  The function <tt class="docutils literal"><span class="pre">f</span></tt> provided
+<strong>must</strong> have the signature <tt class="docutils literal"><span class="pre">f(a,b,c,d,e,f)</span></tt>, but should almost
+certainly be an inerited class member with the signature
+<tt class="docutils literal"><span class="pre">f(self,a,b,c,d,e,f)</span></tt>.
+See pgapack documentation for more about user functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> &#8211; Python function</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="examples.html#sec-crossoverexamples"><em>Example 5: User-defined Crossover Operator</em></a> for an example on setting the crossover
+operator.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="PGA.SetMutation">
+<tt class="descname">SetMutation</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#PGA.SetMutation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a function for the mutation operator.  The function <tt class="docutils literal"><span class="pre">f</span></tt> provided
+<strong>must</strong> have the signature <tt class="docutils literal"><span class="pre">f(p,</span> <span class="pre">pop,</span> <span class="pre">prob)</span></tt>, but should almost
+certainly be an inerited class member with the signature
+<tt class="docutils literal"><span class="pre">f(self,</span> <span class="pre">p,</span> <span class="pre">pop,</span> <span class="pre">prob)</span></tt>.
+See pgapack documentation for more about user functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> &#8211; Python function</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="examples.html#sec-mutationexamples"><em>Example 6: User-defined Mutation Operator</em></a> for an example on setting the mutation
+operator.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="PGA.SetEndOfGen">
+<tt class="descname">SetEndOfGen</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#PGA.SetEndOfGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a function for an operator to be performed at the end of each
+generation.  The function <tt class="docutils literal"><span class="pre">f</span></tt> provided
+<strong>must</strong> have the signature <tt class="docutils literal"><span class="pre">f(pop)</span></tt>, but should almost certainly
+be an inerited class member with the signature <tt class="docutils literal"><span class="pre">f(self,</span> <span class="pre">pop)</span></tt>.
+Such an operator can be used to implement hill-climbing heuristics.
+See pgapack documentation for more about user functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> &#8211; Python function</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="examples.html#sec-endofgenexamples"><em>Example 7: User-defined End of Generation Operator</em></a> for an example on setting the an end of
+generation operator.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API Reference</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#pypgapack-api">pypgapack API</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="methods.html"
+                        title="previous chapter">Methods</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api_reference.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="methods.html" title="Methods"
+             >previous</a> |</li>
+        <li><a href="index.html">pypgapack 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Jeremy Roberts.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
