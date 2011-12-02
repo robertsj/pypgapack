@@ -7,7 +7,7 @@ CONTENTS
   That's this file.
 
 doc/
-  Contains documentation for using PyPGAPack.  The Python-specific API
+  Contains documentation for using pypgapack.  The Python-specific API
   is lightly documented, and the user is urged to read the PGAPack
   documentation for more details.
 pypgapack/

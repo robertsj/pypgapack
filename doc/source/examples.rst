@@ -132,11 +132,11 @@ are from Oliver's original paper by way of Steve Dower's
 :ref:`sec_parallelexamples` for a parallel version that tries
 matching the cited results.
 
-.. literalinclude:: ../../examples/example06.py
+.. literalinclude:: ../../examples/example05.py
 
 Running it once yields the following output:
 
-.. literalinclude:: ../../examples/output/example06_ref
+.. literalinclude:: ../../examples/output/example05_ref
 
 
 
