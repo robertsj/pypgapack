@@ -1,0 +1,17 @@
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       5.535524e+02
+Iter #     Field      Value
+20         Best       6.550377e+02
+Iter #     Field      Value
+30         Best       7.378405e+02
+Iter #     Field      Value
+40         Best       7.537097e+02
+Iter #     Field      Value
+50         Best       7.827324e+02
+The Best Evaluation: 7.827324e+02.
+The Best String:
+#   0: [   66.95374], [   47.92554], [    91.9023], [   75.87186], [   96.31829]
+#   5: [   85.24209], [   69.58556], [   90.59017], [   86.26947], [   72.07333]
+
+***Destroying PGA context***

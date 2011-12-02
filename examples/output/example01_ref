@@ -1,0 +1,16 @@
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       6.900000e+01
+Iter #     Field      Value
+20         Best       7.200000e+01
+Iter #     Field      Value
+30         Best       7.600000e+01
+Iter #     Field      Value
+40         Best       7.700000e+01
+Iter #     Field      Value
+50         Best       8.000000e+01
+The Best Evaluation: 8.000000e+01.
+The Best String:
+[ 0111110111101111011111100111011110111101111111011111110100111111 ]
+[ 011111110111110111111110111101011011 ]
+***Destroying PGA context***

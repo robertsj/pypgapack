@@ -1,0 +1,31 @@
+***Constructing PGA***
+Reference distance is:  423.740563133
+Iter #     Field      Value
+10         Best       1.012977e+03
+Iter #     Field      Value
+20         Best       9.924890e+02
+Iter #     Field      Value
+30         Best       9.924890e+02
+Iter #     Field      Value
+40         Best       9.924890e+02
+Iter #     Field      Value
+50         Best       9.419172e+02
+Iter #     Field      Value
+60         Best       8.709637e+02
+Iter #     Field      Value
+70         Best       8.709637e+02
+Iter #     Field      Value
+80         Best       8.524659e+02
+Iter #     Field      Value
+90         Best       8.524659e+02
+Iter #     Field      Value
+100        Best       7.805903e+02
+The Best Evaluation: 7.805903e+02.
+The Best String:
+#    0: [      29], [       3], [       0], [      12], [      13], [       9]
+#    6: [       4], [       8], [      11], [      10], [       5], [       6]
+#   12: [       7], [      17], [      14], [      18], [      16], [      15]
+#   18: [      26], [      24], [      22], [      19], [      21], [      25]
+#   24: [      27], [      23], [      20], [      28], [       2], [       1]
+
+***Destroying PGA context***

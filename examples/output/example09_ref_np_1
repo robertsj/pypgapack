@@ -1,0 +1,1755 @@
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.013510e+03
+Iter #     Field      Value
+20         Best       9.708795e+02
+Iter #     Field      Value
+30         Best       7.914598e+02
+Iter #     Field      Value
+40         Best       7.914598e+02
+Iter #     Field      Value
+50         Best       7.914598e+02
+Iter #     Field      Value
+60         Best       7.914598e+02
+Iter #     Field      Value
+70         Best       7.914598e+02
+Iter #     Field      Value
+80         Best       7.914598e+02
+Iter #     Field      Value
+90         Best       7.914598e+02
+Iter #     Field      Value
+100        Best       7.914598e+02
+Iter #     Field      Value
+110        Best       7.914598e+02
+Iter #     Field      Value
+120        Best       7.914598e+02
+Iter #     Field      Value
+130        Best       7.914598e+02
+Iter #     Field      Value
+140        Best       7.914598e+02
+Iter #     Field      Value
+150        Best       7.914598e+02
+Iter #     Field      Value
+160        Best       7.914598e+02
+Iter #     Field      Value
+170        Best       7.914598e+02
+Iter #     Field      Value
+180        Best       7.914598e+02
+Iter #     Field      Value
+190        Best       7.914598e+02
+Iter #     Field      Value
+200        Best       7.914598e+02
+Iter #     Field      Value
+210        Best       7.914598e+02
+Iter #     Field      Value
+220        Best       7.914598e+02
+Iter #     Field      Value
+230        Best       7.914598e+02
+Iter #     Field      Value
+240        Best       7.914598e+02
+Iter #     Field      Value
+250        Best       7.914598e+02
+Iter #     Field      Value
+260        Best       7.914598e+02
+Iter #     Field      Value
+270        Best       7.914598e+02
+Iter #     Field      Value
+280        Best       7.914598e+02
+Iter #     Field      Value
+290        Best       7.914598e+02
+Iter #     Field      Value
+300        Best       7.914598e+02
+The Best Evaluation: 7.914598e+02.
+The Best String:
+#    0: [      26], [       7], [       9], [      19], [       0], [      13]
+#    6: [      10], [       6], [      21], [      20], [      11], [      16]
+#   12: [       3], [       1], [      12], [      17], [      27], [      24]
+#   18: [       8], [      28], [      25], [      29], [      23], [      14]
+#   24: [      22], [       2], [      15], [       5], [      18], [       4]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.054908e+03
+Iter #     Field      Value
+20         Best       9.808689e+02
+Iter #     Field      Value
+30         Best       8.589781e+02
+Iter #     Field      Value
+40         Best       8.400226e+02
+Iter #     Field      Value
+50         Best       8.400226e+02
+Iter #     Field      Value
+60         Best       8.400226e+02
+Iter #     Field      Value
+70         Best       8.400226e+02
+Iter #     Field      Value
+80         Best       8.400226e+02
+Iter #     Field      Value
+90         Best       8.400226e+02
+Iter #     Field      Value
+100        Best       8.400226e+02
+Iter #     Field      Value
+110        Best       8.400226e+02
+Iter #     Field      Value
+120        Best       8.400226e+02
+Iter #     Field      Value
+130        Best       8.400226e+02
+Iter #     Field      Value
+140        Best       8.400226e+02
+Iter #     Field      Value
+150        Best       8.400226e+02
+Iter #     Field      Value
+160        Best       8.400226e+02
+Iter #     Field      Value
+170        Best       8.400226e+02
+Iter #     Field      Value
+180        Best       8.400226e+02
+Iter #     Field      Value
+190        Best       8.400226e+02
+Iter #     Field      Value
+200        Best       8.400226e+02
+Iter #     Field      Value
+210        Best       8.400226e+02
+Iter #     Field      Value
+220        Best       8.400226e+02
+Iter #     Field      Value
+230        Best       8.400226e+02
+Iter #     Field      Value
+240        Best       8.400226e+02
+Iter #     Field      Value
+250        Best       8.400226e+02
+Iter #     Field      Value
+260        Best       8.400226e+02
+Iter #     Field      Value
+270        Best       8.400226e+02
+Iter #     Field      Value
+280        Best       8.400226e+02
+Iter #     Field      Value
+290        Best       8.400226e+02
+Iter #     Field      Value
+300        Best       8.400226e+02
+The Best Evaluation: 8.400226e+02.
+The Best String:
+#    0: [      15], [      14], [      28], [      17], [       7], [      21]
+#    6: [      27], [       2], [      18], [       4], [      23], [       6]
+#   12: [       9], [      13], [      12], [       8], [       1], [      29]
+#   18: [       3], [      26], [       5], [      20], [      22], [      10]
+#   24: [      16], [       0], [      19], [      11], [      24], [      25]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.059877e+03
+Iter #     Field      Value
+20         Best       1.059877e+03
+Iter #     Field      Value
+30         Best       1.059877e+03
+Iter #     Field      Value
+40         Best       1.059877e+03
+Iter #     Field      Value
+50         Best       1.059877e+03
+Iter #     Field      Value
+60         Best       9.814728e+02
+Iter #     Field      Value
+70         Best       9.722025e+02
+Iter #     Field      Value
+80         Best       9.422654e+02
+Iter #     Field      Value
+90         Best       9.422654e+02
+Iter #     Field      Value
+100        Best       9.422654e+02
+Iter #     Field      Value
+110        Best       9.422654e+02
+Iter #     Field      Value
+120        Best       9.422654e+02
+Iter #     Field      Value
+130        Best       9.422654e+02
+Iter #     Field      Value
+140        Best       9.422654e+02
+Iter #     Field      Value
+150        Best       9.422654e+02
+Iter #     Field      Value
+160        Best       9.422654e+02
+Iter #     Field      Value
+170        Best       9.422654e+02
+Iter #     Field      Value
+180        Best       9.422654e+02
+Iter #     Field      Value
+190        Best       9.422654e+02
+Iter #     Field      Value
+200        Best       9.422654e+02
+Iter #     Field      Value
+210        Best       9.422654e+02
+Iter #     Field      Value
+220        Best       9.422654e+02
+Iter #     Field      Value
+230        Best       9.422654e+02
+Iter #     Field      Value
+240        Best       9.422654e+02
+Iter #     Field      Value
+250        Best       9.422654e+02
+Iter #     Field      Value
+260        Best       9.422654e+02
+Iter #     Field      Value
+270        Best       9.422654e+02
+Iter #     Field      Value
+280        Best       9.422654e+02
+Iter #     Field      Value
+290        Best       9.422654e+02
+Iter #     Field      Value
+300        Best       9.422654e+02
+The Best Evaluation: 9.422654e+02.
+The Best String:
+#    0: [       0], [      10], [      28], [      25], [       7], [      22]
+#    6: [       3], [      17], [      14], [       5], [      24], [      15]
+#   12: [       8], [       1], [      21], [       6], [      13], [      16]
+#   18: [       4], [      26], [      27], [       9], [      19], [      23]
+#   24: [      12], [       2], [      20], [      11], [      18], [      29]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.084689e+03
+Iter #     Field      Value
+20         Best       1.014483e+03
+Iter #     Field      Value
+30         Best       1.014483e+03
+Iter #     Field      Value
+40         Best       1.014483e+03
+Iter #     Field      Value
+50         Best       9.978738e+02
+Iter #     Field      Value
+60         Best       9.692798e+02
+Iter #     Field      Value
+70         Best       9.692798e+02
+Iter #     Field      Value
+80         Best       9.692798e+02
+Iter #     Field      Value
+90         Best       9.692798e+02
+Iter #     Field      Value
+100        Best       9.692798e+02
+Iter #     Field      Value
+110        Best       9.692798e+02
+Iter #     Field      Value
+120        Best       9.584902e+02
+Iter #     Field      Value
+130        Best       9.584902e+02
+Iter #     Field      Value
+140        Best       9.584902e+02
+Iter #     Field      Value
+150        Best       8.700616e+02
+Iter #     Field      Value
+160        Best       8.700616e+02
+Iter #     Field      Value
+170        Best       8.700616e+02
+Iter #     Field      Value
+180        Best       8.700616e+02
+Iter #     Field      Value
+190        Best       8.700616e+02
+Iter #     Field      Value
+200        Best       8.700616e+02
+Iter #     Field      Value
+210        Best       8.700616e+02
+Iter #     Field      Value
+220        Best       8.700616e+02
+Iter #     Field      Value
+230        Best       8.700616e+02
+Iter #     Field      Value
+240        Best       8.700616e+02
+Iter #     Field      Value
+250        Best       8.700616e+02
+Iter #     Field      Value
+260        Best       8.700616e+02
+Iter #     Field      Value
+270        Best       8.700616e+02
+Iter #     Field      Value
+280        Best       8.700616e+02
+Iter #     Field      Value
+290        Best       8.700616e+02
+Iter #     Field      Value
+300        Best       8.700616e+02
+The Best Evaluation: 8.700616e+02.
+The Best String:
+#    0: [      24], [      22], [       7], [       4], [      26], [       6]
+#    6: [       1], [      13], [      16], [      25], [      10], [       8]
+#   12: [      29], [      19], [       0], [       9], [      21], [      18]
+#   18: [       3], [      28], [      12], [      11], [       2], [      15]
+#   24: [      20], [       5], [      14], [      27], [      23], [      17]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.018673e+03
+Iter #     Field      Value
+20         Best       9.347648e+02
+Iter #     Field      Value
+30         Best       8.837949e+02
+Iter #     Field      Value
+40         Best       7.971459e+02
+Iter #     Field      Value
+50         Best       7.971459e+02
+Iter #     Field      Value
+60         Best       7.971459e+02
+Iter #     Field      Value
+70         Best       7.971459e+02
+Iter #     Field      Value
+80         Best       7.971459e+02
+Iter #     Field      Value
+90         Best       7.971459e+02
+Iter #     Field      Value
+100        Best       7.971459e+02
+Iter #     Field      Value
+110        Best       7.971459e+02
+Iter #     Field      Value
+120        Best       7.971459e+02
+Iter #     Field      Value
+130        Best       7.971459e+02
+Iter #     Field      Value
+140        Best       7.971459e+02
+Iter #     Field      Value
+150        Best       7.971459e+02
+Iter #     Field      Value
+160        Best       7.971459e+02
+Iter #     Field      Value
+170        Best       7.971459e+02
+Iter #     Field      Value
+180        Best       7.971459e+02
+Iter #     Field      Value
+190        Best       7.971459e+02
+Iter #     Field      Value
+200        Best       7.971459e+02
+Iter #     Field      Value
+210        Best       7.971459e+02
+Iter #     Field      Value
+220        Best       7.971459e+02
+Iter #     Field      Value
+230        Best       7.971459e+02
+Iter #     Field      Value
+240        Best       7.971459e+02
+Iter #     Field      Value
+250        Best       7.971459e+02
+Iter #     Field      Value
+260        Best       7.971459e+02
+Iter #     Field      Value
+270        Best       7.971459e+02
+Iter #     Field      Value
+280        Best       7.971459e+02
+Iter #     Field      Value
+290        Best       7.971459e+02
+Iter #     Field      Value
+300        Best       7.971459e+02
+The Best Evaluation: 7.971459e+02.
+The Best String:
+#    0: [      14], [       6], [      29], [      23], [       4], [       3]
+#    6: [      17], [       9], [      28], [      10], [      12], [      20]
+#   12: [      19], [      15], [      26], [      16], [      25], [      21]
+#   18: [       5], [       0], [      18], [       2], [       8], [      11]
+#   24: [      13], [      24], [      22], [       1], [      27], [       7]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.062796e+03
+Iter #     Field      Value
+20         Best       1.062796e+03
+Iter #     Field      Value
+30         Best       1.062796e+03
+Iter #     Field      Value
+40         Best       1.062796e+03
+Iter #     Field      Value
+50         Best       1.062796e+03
+Iter #     Field      Value
+60         Best       1.061917e+03
+Iter #     Field      Value
+70         Best       1.061917e+03
+Iter #     Field      Value
+80         Best       1.061917e+03
+Iter #     Field      Value
+90         Best       1.061917e+03
+Iter #     Field      Value
+100        Best       1.061917e+03
+Iter #     Field      Value
+110        Best       1.061917e+03
+Iter #     Field      Value
+120        Best       1.061917e+03
+Iter #     Field      Value
+130        Best       1.061917e+03
+Iter #     Field      Value
+140        Best       9.267060e+02
+Iter #     Field      Value
+150        Best       9.086941e+02
+Iter #     Field      Value
+160        Best       9.065545e+02
+Iter #     Field      Value
+170        Best       9.065545e+02
+Iter #     Field      Value
+180        Best       9.065545e+02
+Iter #     Field      Value
+190        Best       9.065545e+02
+Iter #     Field      Value
+200        Best       9.065545e+02
+Iter #     Field      Value
+210        Best       9.065545e+02
+Iter #     Field      Value
+220        Best       9.065545e+02
+Iter #     Field      Value
+230        Best       9.065545e+02
+Iter #     Field      Value
+240        Best       9.065545e+02
+Iter #     Field      Value
+250        Best       9.065545e+02
+Iter #     Field      Value
+260        Best       9.065545e+02
+Iter #     Field      Value
+270        Best       9.065545e+02
+Iter #     Field      Value
+280        Best       9.065545e+02
+Iter #     Field      Value
+290        Best       9.065545e+02
+Iter #     Field      Value
+300        Best       9.065545e+02
+The Best Evaluation: 9.065545e+02.
+The Best String:
+#    0: [      25], [       7], [      11], [      28], [       3], [      23]
+#    6: [       6], [       5], [       9], [       8], [       4], [      17]
+#   12: [      20], [      14], [      15], [      24], [       0], [      22]
+#   18: [      26], [      10], [       1], [      12], [      16], [      19]
+#   24: [      13], [       2], [      27], [      21], [      29], [      18]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.058761e+03
+Iter #     Field      Value
+20         Best       9.989122e+02
+Iter #     Field      Value
+30         Best       9.989122e+02
+Iter #     Field      Value
+40         Best       9.989122e+02
+Iter #     Field      Value
+50         Best       9.989122e+02
+Iter #     Field      Value
+60         Best       9.989122e+02
+Iter #     Field      Value
+70         Best       9.989122e+02
+Iter #     Field      Value
+80         Best       9.780290e+02
+Iter #     Field      Value
+90         Best       9.780290e+02
+Iter #     Field      Value
+100        Best       9.632315e+02
+Iter #     Field      Value
+110        Best       9.632315e+02
+Iter #     Field      Value
+120        Best       9.632315e+02
+Iter #     Field      Value
+130        Best       9.632315e+02
+Iter #     Field      Value
+140        Best       9.632315e+02
+Iter #     Field      Value
+150        Best       9.632315e+02
+Iter #     Field      Value
+160        Best       9.632315e+02
+Iter #     Field      Value
+170        Best       9.632315e+02
+Iter #     Field      Value
+180        Best       9.632315e+02
+Iter #     Field      Value
+190        Best       9.632315e+02
+Iter #     Field      Value
+200        Best       9.632315e+02
+Iter #     Field      Value
+210        Best       9.632315e+02
+Iter #     Field      Value
+220        Best       9.632315e+02
+Iter #     Field      Value
+230        Best       9.632315e+02
+Iter #     Field      Value
+240        Best       9.632315e+02
+Iter #     Field      Value
+250        Best       9.632315e+02
+Iter #     Field      Value
+260        Best       9.632315e+02
+Iter #     Field      Value
+270        Best       9.632315e+02
+Iter #     Field      Value
+280        Best       9.632315e+02
+Iter #     Field      Value
+290        Best       9.632315e+02
+Iter #     Field      Value
+300        Best       9.632315e+02
+The Best Evaluation: 9.632315e+02.
+The Best String:
+#    0: [      28], [      22], [       1], [      21], [      10], [      12]
+#    6: [      13], [       4], [      17], [      29], [      24], [      15]
+#   12: [      27], [       9], [      25], [      14], [      11], [      19]
+#   18: [       0], [       7], [      18], [       3], [      23], [      16]
+#   24: [       8], [      20], [       6], [       2], [       5], [      26]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.027828e+03
+Iter #     Field      Value
+20         Best       1.003516e+03
+Iter #     Field      Value
+30         Best       9.514707e+02
+Iter #     Field      Value
+40         Best       9.514707e+02
+Iter #     Field      Value
+50         Best       9.514707e+02
+Iter #     Field      Value
+60         Best       9.514707e+02
+Iter #     Field      Value
+70         Best       9.514707e+02
+Iter #     Field      Value
+80         Best       9.514707e+02
+Iter #     Field      Value
+90         Best       9.514707e+02
+Iter #     Field      Value
+100        Best       9.514707e+02
+Iter #     Field      Value
+110        Best       9.514707e+02
+Iter #     Field      Value
+120        Best       9.514707e+02
+Iter #     Field      Value
+130        Best       9.514707e+02
+Iter #     Field      Value
+140        Best       9.514707e+02
+Iter #     Field      Value
+150        Best       9.514707e+02
+Iter #     Field      Value
+160        Best       9.514707e+02
+Iter #     Field      Value
+170        Best       9.514707e+02
+Iter #     Field      Value
+180        Best       9.514707e+02
+Iter #     Field      Value
+190        Best       9.514707e+02
+Iter #     Field      Value
+200        Best       9.514707e+02
+Iter #     Field      Value
+210        Best       9.514707e+02
+Iter #     Field      Value
+220        Best       9.514707e+02
+Iter #     Field      Value
+230        Best       9.514707e+02
+Iter #     Field      Value
+240        Best       9.514707e+02
+Iter #     Field      Value
+250        Best       9.514707e+02
+Iter #     Field      Value
+260        Best       9.061631e+02
+Iter #     Field      Value
+270        Best       9.020996e+02
+Iter #     Field      Value
+280        Best       9.020996e+02
+Iter #     Field      Value
+290        Best       9.020996e+02
+Iter #     Field      Value
+300        Best       9.020996e+02
+The Best Evaluation: 9.020996e+02.
+The Best String:
+#    0: [       1], [      20], [       5], [      26], [      11], [       6]
+#    6: [      10], [      14], [       9], [      17], [       8], [      28]
+#   12: [      18], [       4], [      21], [      19], [      16], [      24]
+#   18: [       0], [       2], [      12], [      13], [      22], [      23]
+#   24: [      25], [      15], [       3], [      27], [      29], [       7]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.066791e+03
+Iter #     Field      Value
+20         Best       1.059740e+03
+Iter #     Field      Value
+30         Best       9.129596e+02
+Iter #     Field      Value
+40         Best       8.675850e+02
+Iter #     Field      Value
+50         Best       8.251191e+02
+Iter #     Field      Value
+60         Best       7.815220e+02
+Iter #     Field      Value
+70         Best       6.734538e+02
+Iter #     Field      Value
+80         Best       6.226256e+02
+Iter #     Field      Value
+90         Best       6.226256e+02
+Iter #     Field      Value
+100        Best       6.226256e+02
+Iter #     Field      Value
+110        Best       6.226256e+02
+Iter #     Field      Value
+120        Best       6.226256e+02
+Iter #     Field      Value
+130        Best       6.226256e+02
+Iter #     Field      Value
+140        Best       6.226256e+02
+Iter #     Field      Value
+150        Best       6.226256e+02
+Iter #     Field      Value
+160        Best       6.226256e+02
+Iter #     Field      Value
+170        Best       6.226256e+02
+Iter #     Field      Value
+180        Best       6.226256e+02
+Iter #     Field      Value
+190        Best       6.226256e+02
+Iter #     Field      Value
+200        Best       6.226256e+02
+Iter #     Field      Value
+210        Best       6.226256e+02
+Iter #     Field      Value
+220        Best       6.226256e+02
+Iter #     Field      Value
+230        Best       6.226256e+02
+Iter #     Field      Value
+240        Best       6.226256e+02
+Iter #     Field      Value
+250        Best       6.226256e+02
+Iter #     Field      Value
+260        Best       6.226256e+02
+Iter #     Field      Value
+270        Best       6.226256e+02
+Iter #     Field      Value
+280        Best       6.226256e+02
+Iter #     Field      Value
+290        Best       6.226256e+02
+Iter #     Field      Value
+300        Best       6.226256e+02
+The Best Evaluation: 6.226256e+02.
+The Best String:
+#    0: [       9], [      29], [      27], [      12], [      11], [       5]
+#    6: [       6], [       2], [      25], [       3], [      24], [      28]
+#   12: [      19], [      26], [       8], [      18], [      16], [       4]
+#   18: [      17], [      10], [      20], [      15], [      21], [      22]
+#   24: [      13], [      14], [       1], [      23], [       0], [       7]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.092801e+03
+Iter #     Field      Value
+20         Best       9.978108e+02
+Iter #     Field      Value
+30         Best       9.978108e+02
+Iter #     Field      Value
+40         Best       9.978108e+02
+Iter #     Field      Value
+50         Best       9.978108e+02
+Iter #     Field      Value
+60         Best       9.978108e+02
+Iter #     Field      Value
+70         Best       9.978108e+02
+Iter #     Field      Value
+80         Best       9.978108e+02
+Iter #     Field      Value
+90         Best       9.978108e+02
+Iter #     Field      Value
+100        Best       9.978108e+02
+Iter #     Field      Value
+110        Best       9.978108e+02
+Iter #     Field      Value
+120        Best       9.978108e+02
+Iter #     Field      Value
+130        Best       9.978108e+02
+Iter #     Field      Value
+140        Best       9.978108e+02
+Iter #     Field      Value
+150        Best       9.978108e+02
+Iter #     Field      Value
+160        Best       9.978108e+02
+Iter #     Field      Value
+170        Best       9.978108e+02
+Iter #     Field      Value
+180        Best       9.978108e+02
+Iter #     Field      Value
+190        Best       9.978108e+02
+Iter #     Field      Value
+200        Best       9.978108e+02
+Iter #     Field      Value
+210        Best       9.978108e+02
+Iter #     Field      Value
+220        Best       9.978108e+02
+Iter #     Field      Value
+230        Best       9.978108e+02
+Iter #     Field      Value
+240        Best       9.978108e+02
+Iter #     Field      Value
+250        Best       9.978108e+02
+Iter #     Field      Value
+260        Best       9.978108e+02
+Iter #     Field      Value
+270        Best       9.978108e+02
+Iter #     Field      Value
+280        Best       9.978108e+02
+Iter #     Field      Value
+290        Best       9.978108e+02
+Iter #     Field      Value
+300        Best       9.978108e+02
+The Best Evaluation: 9.978108e+02.
+The Best String:
+#    0: [      15], [      22], [       0], [      14], [      21], [      16]
+#    6: [      18], [       7], [      23], [      17], [       5], [      11]
+#   12: [      28], [       9], [      13], [       6], [      29], [      10]
+#   18: [       3], [       4], [      19], [      27], [       8], [      12]
+#   24: [       1], [      24], [      20], [      26], [       2], [      25]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.068618e+03
+Iter #     Field      Value
+20         Best       9.649288e+02
+Iter #     Field      Value
+30         Best       8.200410e+02
+Iter #     Field      Value
+40         Best       8.018872e+02
+Iter #     Field      Value
+50         Best       7.551963e+02
+Iter #     Field      Value
+60         Best       7.551963e+02
+Iter #     Field      Value
+70         Best       7.551963e+02
+Iter #     Field      Value
+80         Best       7.551963e+02
+Iter #     Field      Value
+90         Best       7.551963e+02
+Iter #     Field      Value
+100        Best       7.551963e+02
+Iter #     Field      Value
+110        Best       7.551963e+02
+Iter #     Field      Value
+120        Best       7.551963e+02
+Iter #     Field      Value
+130        Best       7.551963e+02
+Iter #     Field      Value
+140        Best       7.551963e+02
+Iter #     Field      Value
+150        Best       7.551963e+02
+Iter #     Field      Value
+160        Best       7.551963e+02
+Iter #     Field      Value
+170        Best       7.551963e+02
+Iter #     Field      Value
+180        Best       7.551963e+02
+Iter #     Field      Value
+190        Best       7.551963e+02
+Iter #     Field      Value
+200        Best       7.551963e+02
+Iter #     Field      Value
+210        Best       7.551963e+02
+Iter #     Field      Value
+220        Best       7.551963e+02
+Iter #     Field      Value
+230        Best       7.551963e+02
+Iter #     Field      Value
+240        Best       7.551963e+02
+Iter #     Field      Value
+250        Best       7.551963e+02
+Iter #     Field      Value
+260        Best       7.551963e+02
+Iter #     Field      Value
+270        Best       7.551963e+02
+Iter #     Field      Value
+280        Best       7.551963e+02
+Iter #     Field      Value
+290        Best       7.551963e+02
+Iter #     Field      Value
+300        Best       7.551963e+02
+The Best Evaluation: 7.551963e+02.
+The Best String:
+#    0: [       6], [       2], [      15], [      11], [      10], [      17]
+#    6: [      21], [      24], [      27], [      19], [      14], [      16]
+#   12: [       0], [       1], [      29], [      23], [      22], [       9]
+#   18: [       3], [      18], [      28], [       4], [      13], [       5]
+#   24: [      20], [      26], [       8], [      25], [      12], [       7]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.043016e+03
+Iter #     Field      Value
+20         Best       9.542425e+02
+Iter #     Field      Value
+30         Best       8.043073e+02
+Iter #     Field      Value
+40         Best       7.122672e+02
+Iter #     Field      Value
+50         Best       6.478738e+02
+Iter #     Field      Value
+60         Best       6.478738e+02
+Iter #     Field      Value
+70         Best       6.478738e+02
+Iter #     Field      Value
+80         Best       6.478738e+02
+Iter #     Field      Value
+90         Best       6.478738e+02
+Iter #     Field      Value
+100        Best       6.478738e+02
+Iter #     Field      Value
+110        Best       6.478738e+02
+Iter #     Field      Value
+120        Best       6.478738e+02
+Iter #     Field      Value
+130        Best       6.478738e+02
+Iter #     Field      Value
+140        Best       6.478738e+02
+Iter #     Field      Value
+150        Best       6.478738e+02
+Iter #     Field      Value
+160        Best       6.478738e+02
+Iter #     Field      Value
+170        Best       6.478738e+02
+Iter #     Field      Value
+180        Best       6.478738e+02
+Iter #     Field      Value
+190        Best       6.478738e+02
+Iter #     Field      Value
+200        Best       6.478738e+02
+Iter #     Field      Value
+210        Best       6.478738e+02
+Iter #     Field      Value
+220        Best       6.478738e+02
+Iter #     Field      Value
+230        Best       6.478738e+02
+Iter #     Field      Value
+240        Best       6.478738e+02
+Iter #     Field      Value
+250        Best       6.478738e+02
+Iter #     Field      Value
+260        Best       6.478738e+02
+Iter #     Field      Value
+270        Best       6.478738e+02
+Iter #     Field      Value
+280        Best       6.478738e+02
+Iter #     Field      Value
+290        Best       6.478738e+02
+Iter #     Field      Value
+300        Best       6.478738e+02
+The Best Evaluation: 6.478738e+02.
+The Best String:
+#    0: [       4], [      12], [      20], [      25], [      18], [      10]
+#    6: [      15], [       6], [      21], [       3], [      17], [      27]
+#   12: [      29], [      11], [      19], [      13], [       1], [      24]
+#   18: [      22], [      14], [       2], [       5], [      23], [      16]
+#   24: [      28], [       7], [      26], [       9], [       0], [       8]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.064776e+03
+Iter #     Field      Value
+20         Best       1.064776e+03
+Iter #     Field      Value
+30         Best       1.022002e+03
+Iter #     Field      Value
+40         Best       1.022002e+03
+Iter #     Field      Value
+50         Best       9.429444e+02
+Iter #     Field      Value
+60         Best       7.909834e+02
+Iter #     Field      Value
+70         Best       7.909834e+02
+Iter #     Field      Value
+80         Best       7.909834e+02
+Iter #     Field      Value
+90         Best       7.505887e+02
+Iter #     Field      Value
+100        Best       7.505887e+02
+Iter #     Field      Value
+110        Best       7.505887e+02
+Iter #     Field      Value
+120        Best       7.505887e+02
+Iter #     Field      Value
+130        Best       7.505887e+02
+Iter #     Field      Value
+140        Best       7.505887e+02
+Iter #     Field      Value
+150        Best       7.505887e+02
+Iter #     Field      Value
+160        Best       7.505887e+02
+Iter #     Field      Value
+170        Best       7.505887e+02
+Iter #     Field      Value
+180        Best       7.505887e+02
+Iter #     Field      Value
+190        Best       7.505887e+02
+Iter #     Field      Value
+200        Best       7.505887e+02
+Iter #     Field      Value
+210        Best       7.505887e+02
+Iter #     Field      Value
+220        Best       7.505887e+02
+Iter #     Field      Value
+230        Best       7.505887e+02
+Iter #     Field      Value
+240        Best       7.505887e+02
+Iter #     Field      Value
+250        Best       7.505887e+02
+Iter #     Field      Value
+260        Best       7.505887e+02
+Iter #     Field      Value
+270        Best       7.505887e+02
+Iter #     Field      Value
+280        Best       7.505887e+02
+Iter #     Field      Value
+290        Best       7.505887e+02
+Iter #     Field      Value
+300        Best       7.505887e+02
+The Best Evaluation: 7.505887e+02.
+The Best String:
+#    0: [      25], [      11], [      12], [      24], [      13], [      23]
+#    6: [      29], [      27], [      15], [      28], [      14], [      21]
+#   12: [      26], [      18], [      22], [       9], [       1], [      10]
+#   18: [       3], [       7], [       6], [      17], [       0], [      20]
+#   24: [       5], [       8], [      19], [      16], [       2], [       4]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.015545e+03
+Iter #     Field      Value
+20         Best       9.577735e+02
+Iter #     Field      Value
+30         Best       9.577735e+02
+Iter #     Field      Value
+40         Best       9.041442e+02
+Iter #     Field      Value
+50         Best       9.019496e+02
+Iter #     Field      Value
+60         Best       9.019496e+02
+Iter #     Field      Value
+70         Best       9.019496e+02
+Iter #     Field      Value
+80         Best       8.930092e+02
+Iter #     Field      Value
+90         Best       8.751669e+02
+Iter #     Field      Value
+100        Best       8.751669e+02
+Iter #     Field      Value
+110        Best       7.884606e+02
+Iter #     Field      Value
+120        Best       6.577637e+02
+Iter #     Field      Value
+130        Best       6.577637e+02
+Iter #     Field      Value
+140        Best       6.577637e+02
+Iter #     Field      Value
+150        Best       6.577637e+02
+Iter #     Field      Value
+160        Best       6.577637e+02
+Iter #     Field      Value
+170        Best       6.577637e+02
+Iter #     Field      Value
+180        Best       6.577637e+02
+Iter #     Field      Value
+190        Best       6.577637e+02
+Iter #     Field      Value
+200        Best       6.577637e+02
+Iter #     Field      Value
+210        Best       6.577637e+02
+Iter #     Field      Value
+220        Best       6.577637e+02
+Iter #     Field      Value
+230        Best       6.577637e+02
+Iter #     Field      Value
+240        Best       6.577637e+02
+Iter #     Field      Value
+250        Best       6.577637e+02
+Iter #     Field      Value
+260        Best       6.577637e+02
+Iter #     Field      Value
+270        Best       6.577637e+02
+Iter #     Field      Value
+280        Best       6.577637e+02
+Iter #     Field      Value
+290        Best       6.577637e+02
+Iter #     Field      Value
+300        Best       6.577637e+02
+The Best Evaluation: 6.577637e+02.
+The Best String:
+#    0: [      27], [      25], [      15], [      16], [      12], [      11]
+#    6: [      26], [       6], [      22], [      13], [       8], [      19]
+#   12: [       2], [       1], [      14], [      10], [       7], [      21]
+#   18: [       0], [      28], [      18], [      23], [      17], [      20]
+#   24: [       3], [       4], [      29], [       5], [      24], [       9]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.012702e+03
+Iter #     Field      Value
+20         Best       1.012702e+03
+Iter #     Field      Value
+30         Best       1.012702e+03
+Iter #     Field      Value
+40         Best       1.012702e+03
+Iter #     Field      Value
+50         Best       1.012702e+03
+Iter #     Field      Value
+60         Best       1.012702e+03
+Iter #     Field      Value
+70         Best       1.007276e+03
+Iter #     Field      Value
+80         Best       1.007276e+03
+Iter #     Field      Value
+90         Best       1.007276e+03
+Iter #     Field      Value
+100        Best       1.007276e+03
+Iter #     Field      Value
+110        Best       9.367659e+02
+Iter #     Field      Value
+120        Best       8.573406e+02
+Iter #     Field      Value
+130        Best       8.573406e+02
+Iter #     Field      Value
+140        Best       8.573406e+02
+Iter #     Field      Value
+150        Best       8.573406e+02
+Iter #     Field      Value
+160        Best       8.573406e+02
+Iter #     Field      Value
+170        Best       8.573406e+02
+Iter #     Field      Value
+180        Best       8.573406e+02
+Iter #     Field      Value
+190        Best       8.573406e+02
+Iter #     Field      Value
+200        Best       8.573406e+02
+Iter #     Field      Value
+210        Best       8.573406e+02
+Iter #     Field      Value
+220        Best       8.573406e+02
+Iter #     Field      Value
+230        Best       8.573406e+02
+Iter #     Field      Value
+240        Best       8.573406e+02
+Iter #     Field      Value
+250        Best       8.573406e+02
+Iter #     Field      Value
+260        Best       8.573406e+02
+Iter #     Field      Value
+270        Best       8.573406e+02
+Iter #     Field      Value
+280        Best       8.573406e+02
+Iter #     Field      Value
+290        Best       8.573406e+02
+Iter #     Field      Value
+300        Best       8.573406e+02
+The Best Evaluation: 8.573406e+02.
+The Best String:
+#    0: [      22], [      26], [      20], [      16], [      17], [       3]
+#    6: [      28], [       0], [       8], [      13], [       9], [      11]
+#   12: [      14], [      27], [      25], [      15], [       7], [      18]
+#   18: [      23], [      29], [      24], [      12], [       5], [       4]
+#   24: [      21], [      10], [       6], [       2], [       1], [      19]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.066711e+03
+Iter #     Field      Value
+20         Best       9.810563e+02
+Iter #     Field      Value
+30         Best       9.810563e+02
+Iter #     Field      Value
+40         Best       9.810563e+02
+Iter #     Field      Value
+50         Best       9.810563e+02
+Iter #     Field      Value
+60         Best       9.810563e+02
+Iter #     Field      Value
+70         Best       9.810563e+02
+Iter #     Field      Value
+80         Best       9.810563e+02
+Iter #     Field      Value
+90         Best       9.810563e+02
+Iter #     Field      Value
+100        Best       9.810563e+02
+Iter #     Field      Value
+110        Best       9.810563e+02
+Iter #     Field      Value
+120        Best       9.810563e+02
+Iter #     Field      Value
+130        Best       9.810563e+02
+Iter #     Field      Value
+140        Best       9.810563e+02
+Iter #     Field      Value
+150        Best       9.810563e+02
+Iter #     Field      Value
+160        Best       9.810563e+02
+Iter #     Field      Value
+170        Best       9.810563e+02
+Iter #     Field      Value
+180        Best       9.810563e+02
+Iter #     Field      Value
+190        Best       9.810563e+02
+Iter #     Field      Value
+200        Best       9.810563e+02
+Iter #     Field      Value
+210        Best       9.810563e+02
+Iter #     Field      Value
+220        Best       9.527937e+02
+Iter #     Field      Value
+230        Best       8.537380e+02
+Iter #     Field      Value
+240        Best       8.537380e+02
+Iter #     Field      Value
+250        Best       8.537380e+02
+Iter #     Field      Value
+260        Best       8.537380e+02
+Iter #     Field      Value
+270        Best       8.537380e+02
+Iter #     Field      Value
+280        Best       8.537380e+02
+Iter #     Field      Value
+290        Best       8.537380e+02
+Iter #     Field      Value
+300        Best       8.537380e+02
+The Best Evaluation: 8.537380e+02.
+The Best String:
+#    0: [      16], [      29], [      20], [      18], [      14], [      25]
+#    6: [       1], [      17], [      11], [      10], [      28], [       4]
+#   12: [       8], [      12], [       7], [      13], [       5], [       6]
+#   18: [      22], [      27], [       9], [      15], [      19], [       0]
+#   24: [      21], [      23], [      24], [       3], [       2], [      26]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       9.754032e+02
+Iter #     Field      Value
+20         Best       9.754032e+02
+Iter #     Field      Value
+30         Best       9.754032e+02
+Iter #     Field      Value
+40         Best       9.754032e+02
+Iter #     Field      Value
+50         Best       9.754032e+02
+Iter #     Field      Value
+60         Best       9.754032e+02
+Iter #     Field      Value
+70         Best       9.754032e+02
+Iter #     Field      Value
+80         Best       9.754032e+02
+Iter #     Field      Value
+90         Best       9.754032e+02
+Iter #     Field      Value
+100        Best       9.754032e+02
+Iter #     Field      Value
+110        Best       9.754032e+02
+Iter #     Field      Value
+120        Best       9.754032e+02
+Iter #     Field      Value
+130        Best       9.754032e+02
+Iter #     Field      Value
+140        Best       9.754032e+02
+Iter #     Field      Value
+150        Best       9.754032e+02
+Iter #     Field      Value
+160        Best       9.754032e+02
+Iter #     Field      Value
+170        Best       9.754032e+02
+Iter #     Field      Value
+180        Best       9.754032e+02
+Iter #     Field      Value
+190        Best       9.754032e+02
+Iter #     Field      Value
+200        Best       9.754032e+02
+Iter #     Field      Value
+210        Best       9.754032e+02
+Iter #     Field      Value
+220        Best       9.269775e+02
+Iter #     Field      Value
+230        Best       9.269775e+02
+Iter #     Field      Value
+240        Best       9.269775e+02
+Iter #     Field      Value
+250        Best       9.269775e+02
+Iter #     Field      Value
+260        Best       9.269775e+02
+Iter #     Field      Value
+270        Best       9.269775e+02
+Iter #     Field      Value
+280        Best       9.269775e+02
+Iter #     Field      Value
+290        Best       9.269775e+02
+Iter #     Field      Value
+300        Best       9.269775e+02
+The Best Evaluation: 9.269775e+02.
+The Best String:
+#    0: [      16], [       7], [      27], [      12], [      26], [      18]
+#    6: [       6], [      24], [      15], [       4], [       1], [      22]
+#   12: [      29], [      23], [       5], [       3], [      10], [      17]
+#   18: [      13], [       8], [      11], [      19], [      21], [       2]
+#   24: [       9], [      14], [      20], [      28], [       0], [      25]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       9.960394e+02
+Iter #     Field      Value
+20         Best       8.233139e+02
+Iter #     Field      Value
+30         Best       8.233139e+02
+Iter #     Field      Value
+40         Best       8.233139e+02
+Iter #     Field      Value
+50         Best       8.233139e+02
+Iter #     Field      Value
+60         Best       8.233139e+02
+Iter #     Field      Value
+70         Best       8.233139e+02
+Iter #     Field      Value
+80         Best       8.233139e+02
+Iter #     Field      Value
+90         Best       8.233139e+02
+Iter #     Field      Value
+100        Best       8.233139e+02
+Iter #     Field      Value
+110        Best       8.233139e+02
+Iter #     Field      Value
+120        Best       8.233139e+02
+Iter #     Field      Value
+130        Best       8.233139e+02
+Iter #     Field      Value
+140        Best       8.233139e+02
+Iter #     Field      Value
+150        Best       8.233139e+02
+Iter #     Field      Value
+160        Best       8.233139e+02
+Iter #     Field      Value
+170        Best       8.233139e+02
+Iter #     Field      Value
+180        Best       8.233139e+02
+Iter #     Field      Value
+190        Best       8.233139e+02
+Iter #     Field      Value
+200        Best       8.233139e+02
+Iter #     Field      Value
+210        Best       8.233139e+02
+Iter #     Field      Value
+220        Best       8.233139e+02
+Iter #     Field      Value
+230        Best       8.233139e+02
+Iter #     Field      Value
+240        Best       8.233139e+02
+Iter #     Field      Value
+250        Best       8.233139e+02
+Iter #     Field      Value
+260        Best       8.233139e+02
+Iter #     Field      Value
+270        Best       8.233139e+02
+Iter #     Field      Value
+280        Best       8.233139e+02
+Iter #     Field      Value
+290        Best       8.233139e+02
+Iter #     Field      Value
+300        Best       8.233139e+02
+The Best Evaluation: 8.233139e+02.
+The Best String:
+#    0: [      24], [       7], [       9], [      11], [      19], [       8]
+#    6: [      28], [       4], [      13], [       2], [      15], [      22]
+#   12: [      14], [      17], [      27], [       5], [      20], [      16]
+#   18: [       3], [      12], [      23], [      18], [       0], [      21]
+#   24: [       1], [       6], [      26], [      10], [      29], [      25]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.070663e+03
+Iter #     Field      Value
+20         Best       9.530264e+02
+Iter #     Field      Value
+30         Best       8.764942e+02
+Iter #     Field      Value
+40         Best       8.719985e+02
+Iter #     Field      Value
+50         Best       8.719985e+02
+Iter #     Field      Value
+60         Best       8.719985e+02
+Iter #     Field      Value
+70         Best       8.719985e+02
+Iter #     Field      Value
+80         Best       8.719985e+02
+Iter #     Field      Value
+90         Best       8.719985e+02
+Iter #     Field      Value
+100        Best       8.719985e+02
+Iter #     Field      Value
+110        Best       8.719985e+02
+Iter #     Field      Value
+120        Best       8.719985e+02
+Iter #     Field      Value
+130        Best       8.719985e+02
+Iter #     Field      Value
+140        Best       8.719985e+02
+Iter #     Field      Value
+150        Best       8.719985e+02
+Iter #     Field      Value
+160        Best       8.719985e+02
+Iter #     Field      Value
+170        Best       8.719985e+02
+Iter #     Field      Value
+180        Best       8.719985e+02
+Iter #     Field      Value
+190        Best       8.719985e+02
+Iter #     Field      Value
+200        Best       8.719985e+02
+Iter #     Field      Value
+210        Best       8.719985e+02
+Iter #     Field      Value
+220        Best       8.719985e+02
+Iter #     Field      Value
+230        Best       8.719985e+02
+Iter #     Field      Value
+240        Best       8.719985e+02
+Iter #     Field      Value
+250        Best       8.719985e+02
+Iter #     Field      Value
+260        Best       8.719985e+02
+Iter #     Field      Value
+270        Best       8.719985e+02
+Iter #     Field      Value
+280        Best       8.719985e+02
+Iter #     Field      Value
+290        Best       8.719985e+02
+Iter #     Field      Value
+300        Best       8.719985e+02
+The Best Evaluation: 8.719985e+02.
+The Best String:
+#    0: [      27], [       1], [      24], [       3], [      18], [      25]
+#    6: [      20], [       8], [      12], [      29], [       7], [      19]
+#   12: [       5], [       6], [      21], [       9], [      28], [      11]
+#   18: [       2], [      26], [      15], [      16], [      22], [       0]
+#   24: [      14], [      23], [      17], [      10], [      13], [       4]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.051847e+03
+Iter #     Field      Value
+20         Best       1.015135e+03
+Iter #     Field      Value
+30         Best       1.006259e+03
+Iter #     Field      Value
+40         Best       9.581229e+02
+Iter #     Field      Value
+50         Best       9.581229e+02
+Iter #     Field      Value
+60         Best       9.403823e+02
+Iter #     Field      Value
+70         Best       9.403823e+02
+Iter #     Field      Value
+80         Best       9.403823e+02
+Iter #     Field      Value
+90         Best       9.403823e+02
+Iter #     Field      Value
+100        Best       9.403823e+02
+Iter #     Field      Value
+110        Best       9.403823e+02
+Iter #     Field      Value
+120        Best       9.403823e+02
+Iter #     Field      Value
+130        Best       9.403823e+02
+Iter #     Field      Value
+140        Best       9.403823e+02
+Iter #     Field      Value
+150        Best       9.403823e+02
+Iter #     Field      Value
+160        Best       9.403823e+02
+Iter #     Field      Value
+170        Best       9.403823e+02
+Iter #     Field      Value
+180        Best       9.403823e+02
+Iter #     Field      Value
+190        Best       9.403823e+02
+Iter #     Field      Value
+200        Best       9.403823e+02
+Iter #     Field      Value
+210        Best       9.403823e+02
+Iter #     Field      Value
+220        Best       9.403823e+02
+Iter #     Field      Value
+230        Best       9.403823e+02
+Iter #     Field      Value
+240        Best       9.403823e+02
+Iter #     Field      Value
+250        Best       9.403823e+02
+Iter #     Field      Value
+260        Best       9.403823e+02
+Iter #     Field      Value
+270        Best       9.403823e+02
+Iter #     Field      Value
+280        Best       9.403823e+02
+Iter #     Field      Value
+290        Best       9.403823e+02
+Iter #     Field      Value
+300        Best       9.403823e+02
+The Best Evaluation: 9.403823e+02.
+The Best String:
+#    0: [       2], [       3], [      12], [       4], [      18], [      25]
+#    6: [      22], [      24], [      13], [       0], [       7], [      17]
+#   12: [       9], [      10], [      29], [       8], [      11], [      15]
+#   18: [      28], [       5], [      21], [      27], [      16], [      19]
+#   24: [       6], [      14], [       1], [      20], [      26], [      23]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.040493e+03
+Iter #     Field      Value
+20         Best       1.038465e+03
+Iter #     Field      Value
+30         Best       9.486782e+02
+Iter #     Field      Value
+40         Best       9.141633e+02
+Iter #     Field      Value
+50         Best       9.141633e+02
+Iter #     Field      Value
+60         Best       9.141633e+02
+Iter #     Field      Value
+70         Best       9.141633e+02
+Iter #     Field      Value
+80         Best       9.141633e+02
+Iter #     Field      Value
+90         Best       9.141633e+02
+Iter #     Field      Value
+100        Best       9.141633e+02
+Iter #     Field      Value
+110        Best       9.141633e+02
+Iter #     Field      Value
+120        Best       9.141633e+02
+Iter #     Field      Value
+130        Best       9.141633e+02
+Iter #     Field      Value
+140        Best       9.141633e+02
+Iter #     Field      Value
+150        Best       9.141633e+02
+Iter #     Field      Value
+160        Best       9.141633e+02
+Iter #     Field      Value
+170        Best       9.141633e+02
+Iter #     Field      Value
+180        Best       9.141633e+02
+Iter #     Field      Value
+190        Best       9.141633e+02
+Iter #     Field      Value
+200        Best       9.141633e+02
+Iter #     Field      Value
+210        Best       9.141633e+02
+Iter #     Field      Value
+220        Best       9.141633e+02
+Iter #     Field      Value
+230        Best       9.141633e+02
+Iter #     Field      Value
+240        Best       9.141633e+02
+Iter #     Field      Value
+250        Best       9.141633e+02
+Iter #     Field      Value
+260        Best       9.141633e+02
+Iter #     Field      Value
+270        Best       9.141633e+02
+Iter #     Field      Value
+280        Best       9.141633e+02
+Iter #     Field      Value
+290        Best       9.141633e+02
+Iter #     Field      Value
+300        Best       9.141633e+02
+The Best Evaluation: 9.141633e+02.
+The Best String:
+#    0: [      17], [      24], [       3], [       7], [       9], [       1]
+#    6: [      20], [      21], [      19], [      13], [      23], [      29]
+#   12: [      22], [      25], [       0], [      15], [      14], [       8]
+#   18: [       5], [      16], [      18], [      11], [      28], [       6]
+#   24: [      26], [      10], [      27], [       2], [       4], [      12]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.130762e+03
+Iter #     Field      Value
+20         Best       1.035142e+03
+Iter #     Field      Value
+30         Best       1.022620e+03
+Iter #     Field      Value
+40         Best       8.621427e+02
+Iter #     Field      Value
+50         Best       8.036997e+02
+Iter #     Field      Value
+60         Best       8.036997e+02
+Iter #     Field      Value
+70         Best       8.036997e+02
+Iter #     Field      Value
+80         Best       8.036997e+02
+Iter #     Field      Value
+90         Best       8.036997e+02
+Iter #     Field      Value
+100        Best       8.036997e+02
+Iter #     Field      Value
+110        Best       8.036997e+02
+Iter #     Field      Value
+120        Best       8.036997e+02
+Iter #     Field      Value
+130        Best       8.036997e+02
+Iter #     Field      Value
+140        Best       8.036997e+02
+Iter #     Field      Value
+150        Best       8.036997e+02
+Iter #     Field      Value
+160        Best       8.036997e+02
+Iter #     Field      Value
+170        Best       8.036997e+02
+Iter #     Field      Value
+180        Best       8.036997e+02
+Iter #     Field      Value
+190        Best       8.036997e+02
+Iter #     Field      Value
+200        Best       8.036997e+02
+Iter #     Field      Value
+210        Best       8.036997e+02
+Iter #     Field      Value
+220        Best       8.036997e+02
+Iter #     Field      Value
+230        Best       8.036997e+02
+Iter #     Field      Value
+240        Best       8.036997e+02
+Iter #     Field      Value
+250        Best       8.036997e+02
+Iter #     Field      Value
+260        Best       8.036997e+02
+Iter #     Field      Value
+270        Best       8.036997e+02
+Iter #     Field      Value
+280        Best       8.036997e+02
+Iter #     Field      Value
+290        Best       8.036997e+02
+Iter #     Field      Value
+300        Best       8.036997e+02
+The Best Evaluation: 8.036997e+02.
+The Best String:
+#    0: [       8], [      22], [      25], [       1], [       6], [      17]
+#    6: [      16], [      24], [       9], [       4], [      29], [      13]
+#   12: [      23], [      20], [      12], [      26], [       3], [      19]
+#   18: [      15], [       0], [      10], [      14], [      11], [      21]
+#   24: [       7], [      18], [      28], [       2], [      27], [       5]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.091238e+03
+Iter #     Field      Value
+20         Best       1.091238e+03
+Iter #     Field      Value
+30         Best       1.091238e+03
+Iter #     Field      Value
+40         Best       1.084221e+03
+Iter #     Field      Value
+50         Best       1.033246e+03
+Iter #     Field      Value
+60         Best       9.675953e+02
+Iter #     Field      Value
+70         Best       9.336842e+02
+Iter #     Field      Value
+80         Best       9.336842e+02
+Iter #     Field      Value
+90         Best       9.336842e+02
+Iter #     Field      Value
+100        Best       9.336842e+02
+Iter #     Field      Value
+110        Best       9.336842e+02
+Iter #     Field      Value
+120        Best       9.336842e+02
+Iter #     Field      Value
+130        Best       9.336842e+02
+Iter #     Field      Value
+140        Best       9.336842e+02
+Iter #     Field      Value
+150        Best       9.336842e+02
+Iter #     Field      Value
+160        Best       9.336842e+02
+Iter #     Field      Value
+170        Best       9.336842e+02
+Iter #     Field      Value
+180        Best       9.336842e+02
+Iter #     Field      Value
+190        Best       9.336842e+02
+Iter #     Field      Value
+200        Best       9.336842e+02
+Iter #     Field      Value
+210        Best       9.336842e+02
+Iter #     Field      Value
+220        Best       9.336842e+02
+Iter #     Field      Value
+230        Best       9.336842e+02
+Iter #     Field      Value
+240        Best       9.336842e+02
+Iter #     Field      Value
+250        Best       9.336842e+02
+Iter #     Field      Value
+260        Best       9.336842e+02
+Iter #     Field      Value
+270        Best       9.336842e+02
+Iter #     Field      Value
+280        Best       9.336842e+02
+Iter #     Field      Value
+290        Best       9.336842e+02
+Iter #     Field      Value
+300        Best       9.336842e+02
+The Best Evaluation: 9.336842e+02.
+The Best String:
+#    0: [      15], [      13], [       4], [      11], [      19], [       2]
+#    6: [      29], [      27], [      28], [      16], [      25], [      21]
+#   12: [      22], [       9], [       3], [      23], [       1], [      12]
+#   18: [      17], [       5], [       8], [      26], [      14], [      10]
+#   24: [       7], [       6], [      20], [      18], [       0], [      24]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.085234e+03
+Iter #     Field      Value
+20         Best       9.336058e+02
+Iter #     Field      Value
+30         Best       8.396880e+02
+Iter #     Field      Value
+40         Best       8.396880e+02
+Iter #     Field      Value
+50         Best       8.396880e+02
+Iter #     Field      Value
+60         Best       8.396880e+02
+Iter #     Field      Value
+70         Best       8.396880e+02
+Iter #     Field      Value
+80         Best       8.396880e+02
+Iter #     Field      Value
+90         Best       8.396880e+02
+Iter #     Field      Value
+100        Best       8.396880e+02
+Iter #     Field      Value
+110        Best       8.396880e+02
+Iter #     Field      Value
+120        Best       8.396880e+02
+Iter #     Field      Value
+130        Best       8.396880e+02
+Iter #     Field      Value
+140        Best       8.396880e+02
+Iter #     Field      Value
+150        Best       8.396880e+02
+Iter #     Field      Value
+160        Best       8.396880e+02
+Iter #     Field      Value
+170        Best       8.396880e+02
+Iter #     Field      Value
+180        Best       8.396880e+02
+Iter #     Field      Value
+190        Best       8.396880e+02
+Iter #     Field      Value
+200        Best       8.396880e+02
+Iter #     Field      Value
+210        Best       8.396880e+02
+Iter #     Field      Value
+220        Best       8.396880e+02
+Iter #     Field      Value
+230        Best       8.396880e+02
+Iter #     Field      Value
+240        Best       8.396880e+02
+Iter #     Field      Value
+250        Best       8.396880e+02
+Iter #     Field      Value
+260        Best       8.396880e+02
+Iter #     Field      Value
+270        Best       8.396880e+02
+Iter #     Field      Value
+280        Best       8.396880e+02
+Iter #     Field      Value
+290        Best       8.396880e+02
+Iter #     Field      Value
+300        Best       8.396880e+02
+The Best Evaluation: 8.396880e+02.
+The Best String:
+#    0: [       9], [      25], [       4], [      11], [       3], [      24]
+#    6: [      28], [      23], [      10], [       6], [       8], [      13]
+#   12: [      22], [      29], [      14], [      18], [       2], [      20]
+#   18: [      15], [       7], [      26], [       1], [      21], [       0]
+#   24: [      16], [      12], [      27], [      17], [       5], [      19]
+
+***Destroying PGA context***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.122191e+03
+Iter #     Field      Value
+20         Best       9.143837e+02
+Iter #     Field      Value
+30         Best       9.143837e+02
+Iter #     Field      Value
+40         Best       9.143837e+02
+Iter #     Field      Value
+50         Best       9.143837e+02
+Iter #     Field      Value
+60         Best       9.143837e+02
+Iter #     Field      Value
+70         Best       9.143837e+02
+Iter #     Field      Value
+80         Best       9.143837e+02
+Iter #     Field      Value
+90         Best       9.143837e+02
+Iter #     Field      Value
+100        Best       9.143837e+02
+Iter #     Field      Value
+110        Best       9.143837e+02
+Iter #     Field      Value
+120        Best       9.143837e+02
+Iter #     Field      Value
+130        Best       9.143837e+02
+Iter #     Field      Value
+140        Best       9.143837e+02
+Iter #     Field      Value
+150        Best       9.143837e+02
+Iter #     Field      Value
+160        Best       9.143837e+02
+Iter #     Field      Value
+170        Best       9.143837e+02
+Iter #     Field      Value
+180        Best       9.143837e+02
+Iter #     Field      Value
+190        Best       9.143837e+02
+Iter #     Field      Value
+200        Best       9.143837e+02
+Iter #     Field      Value
+210        Best       9.143837e+02
+Iter #     Field      Value
+220        Best       9.143837e+02
+Iter #     Field      Value
+230        Best       9.143837e+02
+Iter #     Field      Value
+240        Best       9.143837e+02
+Iter #     Field      Value
+250        Best       9.143837e+02
+Iter #     Field      Value
+260        Best       9.143837e+02
+Iter #     Field      Value
+270        Best       9.143837e+02
+Iter #     Field      Value
+280        Best       9.143837e+02
+Iter #     Field      Value
+290        Best       9.143837e+02
+Iter #     Field      Value
+300        Best       9.143837e+02
+The Best Evaluation: 9.143837e+02.
+The Best String:
+#    0: [       7], [      29], [       5], [       2], [      28], [      22]
+#    6: [       8], [      10], [      18], [      19], [       3], [      15]
+#   12: [      14], [      27], [      16], [       4], [      24], [      20]
+#   18: [      17], [      12], [      26], [      25], [       0], [       9]
+#   24: [       6], [      13], [      23], [      11], [      21], [       1]
+
+***Destroying PGA context***
+  MEAN:  844.962788368
+ SIGMA:  97.2494217692
+   MIN:  622.625633555
+   MAX:  997.810825333
+Elapsed time =  67.2148938179  seconds.
