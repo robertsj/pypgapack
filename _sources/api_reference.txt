@@ -9,8 +9,8 @@ Introduction
 
 This section provides a reference for all functions
 defined in the :mod:`pypgapack` module that are *extensions* of the basic 
-pgapack API.  All pgapack functions are contained in the 
-:class:`pypgapack.PGA` class.  The pgapack library is typically 
+PGAPack API.  All PGAPack functions are contained in the 
+:class:`pypgapack.PGA` class.  The PGAPack library is typically 
 used as follows:
 
 .. code-block:: c
@@ -39,9 +39,9 @@ in C/C++ becomes
 .. code-block:: python
 
   obj = pypgapack.PGA(sys.argv, PGA.DATATYPE_BINARY, 100, PGA.MAXIMIZE)
-  obj.PGASetUp()
+  obj.SetUp()
 
-in Python. For all functions included in pgapack, the user is directed to the 
+in Python. For all functions included in PGAPack, the user is directed to the 
 pgapack documentation.  What follows is a description of the few new
 methods added for :mod:`pypgapack` that make life in Python a 
 bit easier.
@@ -71,8 +71,8 @@ This command works with any Python module.  Our interest is in the
  'BinaryPrintString', 'BinaryTwoptCrossover', 'BinaryUniformCrossover',...
 
 and find a really long list of class members, most of which are
-directly from pgapack.  In the following, we document only those
-not included in pgapack, as use of the pgapack functionality is
+directly from PGAPack.  In the following, we document only those
+not included in PGAPack, as use of the PGAPack functionality is
 covered above (i.e. drop the ``ctx`` argument and ``PGA`` prefix). 
 
 .. class:: PGA
@@ -82,7 +82,7 @@ covered above (i.e. drop the ``ctx`` argument and ``PGA`` prefix).
    .. method:: __init__(argv, datatype, n, direction)
 
       Construct the PGA context.  This essentially wraps the PGACreate
-      function, so see the pgapack documentation.
+      function, so see the PGAPack documentation.
 
       :param argv:      system argument
       :param datatype:  allele dataype; can be :const:`PGA.DATATYPE_XXX`,
@@ -113,7 +113,7 @@ covered above (i.e. drop the ``ctx`` argument and ``PGA`` prefix).
       Set a function for initializing strings.  The function ``f`` provided 
       **must** have the signature ``f(p, pop)``, but should almost certainly
       be an inerited class member with the signature ``f(self, p, pop)``.  
-      See pgapack documentation for more about user functions.     
+      See PGAPack documentation for more about user functions.     
 
       :param f:         Python function 
 
@@ -127,7 +127,7 @@ covered above (i.e. drop the ``ctx`` argument and ``PGA`` prefix).
       **must** have the signature ``f(a,b,c,d,e,f)``, but should almost 
       certainly be an inerited class member with the signature 
       ``f(self,a,b,c,d,e,f)``. 
-      See pgapack documentation for more about user functions.
+      See PGAPack documentation for more about user functions.
 
       :param f:         Python function 
 
@@ -142,7 +142,7 @@ covered above (i.e. drop the ``ctx`` argument and ``PGA`` prefix).
       **must** have the signature ``f(p, pop, prob)``, but should almost
       certainly be an inerited class member with the signature 
       ``f(self, p, pop, prob)``.  
-      See pgapack documentation for more about user functions.
+      See PGAPack documentation for more about user functions.
 
       :param f:         Python function 
 
@@ -158,7 +158,7 @@ covered above (i.e. drop the ``ctx`` argument and ``PGA`` prefix).
       **must** have the signature ``f(pop)``, but should almost certainly
       be an inerited class member with the signature ``f(self, pop)``.  
       Such an operator can be used to implement hill-climbing heuristics.
-      See pgapack documentation for more about user functions.
+      See PGAPack documentation for more about user functions.
 
       :param f:         Python function 
 

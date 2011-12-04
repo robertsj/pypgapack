@@ -46,7 +46,8 @@ Parallel functionality is supported with the help of
 
    :mod:`pypgapack` is currently in beta mode, so there may be many
    things that look wrapped but are not.  Testing is a future goal,
-   but not a priority---I need a grade!  Feedback is welcome.
+   but not a priority---I need a grade!  Feedback is welcome at 
+   `robertsj@mit.edu <mailto:robertsj@mit.edu>`_.
 
 Building pypgapack
 ------------------

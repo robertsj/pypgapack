@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pypgapack's documentation!
-=====================================
+pypgapack: a light Python wrapper for PGAPack
+=============================================
 
 .. toctree::
    :maxdepth: 2
@@ -13,6 +13,7 @@ Welcome to pypgapack's documentation!
    examples
    methods
    api_reference
+   license
 
 Indices and tables
 ==================

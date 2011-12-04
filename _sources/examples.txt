@@ -9,9 +9,11 @@ Examples
 All examples are located in the ``pypgapack/examples`` and the 
 reference output for all examples is in ``pypgapack/examples/output``.
 Aside from small floating point differences, the values should be
-the same give the use of a fixed random number generator seed in
+the same given the use of a fixed random number generator seed in
 all the examples.  A utility script ``run_examples.py`` is included
-to test user output to the included reference cases.
+to test user output to the included reference cases.  (Note, the above
+might actually be untrue, as compilation can and will change how
+a fixed pseudo-random number sequence is generated.)
 
 Also, the maximum generation count is limited to
 50 for all cases to produce short output.  Experiment with that limit
@@ -24,7 +26,7 @@ Basic Examples
 --------------
 
 The following are some simple examples that illustrate
-the basic pgapack functionality.
+the basic PGAPack functionality.
 
 
 
@@ -34,7 +36,7 @@ Example 1: MAXBIT
 """""""""""""""""
 
 :mod:`pypgapack` is pretty easy to use, and to demonstrate, we'll solve
-the maxbit problem, the first example in the pgapack documentation.
+the maxbit problem, the first example in the PGAPack documentation.
 
 .. literalinclude:: ../../examples/example01.py
 
@@ -124,7 +126,8 @@ user-defined crossover operator, namely the "Tie-Breaking
 Crossover" (TBX1) of the same work.  
 
 The problem has 30 cities in a plane, and the goal is to minimize
-the distance traveled when visiting each city just once.
+the distance traveled when visiting each city just once in a complete 
+loop.
 The problem has 40 equivalent optima, each with a distance of
 423.741 units.  The coordinates of the cities are in the code, and
 are from Oliver's original paper by way of Steve Dower's 
@@ -148,11 +151,11 @@ Example 6: User-defined Mutation Operator
 We redo :ref:`sec_maxintexample` using a custom mutation
 operator, largely following the PGAPack example.
 
-.. literalinclude:: ../../examples/example04.py
+.. literalinclude:: ../../examples/example06.py
 
 Running it yields the following output:
 
-.. literalinclude:: ../../examples/output/example04_ref
+.. literalinclude:: ../../examples/output/example06_ref
 
 
 
@@ -212,7 +215,7 @@ the following output:
 
 This was using a dual core laptop with probably more browser 
 windows open than needed, but the results look good.  Overall,
-pgapack focuses parallelism on the object function evaluation. 
+PGAPack focuses parallelism on the object function evaluation. 
 Hence, if your objective function is expensive to evaluate, you
 can expect relatively good scaling up to the number of strings
 replaced every generation (the default is 1/10 of the total).
@@ -232,7 +235,7 @@ nature of the "swap" mutation is cited from another work I don't have at
 hand, and the selection appears to be standard elitist, i.e all but 
 the best is replaced.  I set a swap operator that always swaps
 a user-set number of pairs.  Using 3 pairs (i.e. 10%) seems
-to get close to the cited results.  Also, Because PGAPack doesn't like
+to get close to the cited results.  Also, because PGAPack doesn't like
 odd population sizes, I use 22.  
 
 .. literalinclude:: ../../examples/example09.py

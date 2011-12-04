@@ -9,7 +9,7 @@
     
     <title>API Reference &mdash; pypgapack 0.1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/proBlue.css" type="text/css" />
+    <link rel="stylesheet" href="_static/proBlue_mod.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -25,6 +25,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="pypgapack 0.1.0 documentation" href="index.html" />
+    <link rel="next" title="License" href="license.html" />
     <link rel="prev" title="Methods" href="methods.html" /> 
   </head>
   <body>
@@ -34,6 +35,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="license.html" title="License"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="methods.html" title="Methods"
              accesskey="P">previous</a> |</li>
@@ -52,8 +56,8 @@
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This section provides a reference for all functions
 defined in the <tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt> module that are <em>extensions</em> of the basic
-pgapack API.  All pgapack functions are contained in the
-<tt class="xref py py-class docutils literal"><span class="pre">pypgapack.PGA</span></tt> class.  The pgapack library is typically
+PGAPack API.  All PGAPack functions are contained in the
+<tt class="xref py py-class docutils literal"><span class="pre">pypgapack.PGA</span></tt> class.  The PGAPack library is typically
 used as follows:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="kt">double</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">PGAContext</span> <span class="o">*</span><span class="n">ctx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pop</span><span class="p">);</span>
 <span class="n">PGAContext</span> <span class="o">*</span><span class="n">ctx</span><span class="p">;</span>
@@ -75,10 +79,10 @@ a <em>private</em> member of <a class="reference internal" href="#PGA" title="PG
 </div>
 <p>in C/C++ becomes</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">obj</span> <span class="o">=</span> <span class="n">pypgapack</span><span class="o">.</span><span class="n">PGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_BINARY</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
-<span class="n">obj</span><span class="o">.</span><span class="n">PGASetUp</span><span class="p">()</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>in Python. For all functions included in pgapack, the user is directed to the
+<p>in Python. For all functions included in PGAPack, the user is directed to the
 pgapack documentation.  What follows is a description of the few new
 methods added for <tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt> that make life in Python a
 bit easier.</p>
@@ -105,8 +109,8 @@ do the following:</p>
 </pre></div>
 </div>
 <p>and find a really long list of class members, most of which are
-directly from pgapack.  In the following, we document only those
-not included in pgapack, as use of the pgapack functionality is
+directly from PGAPack.  In the following, we document only those
+not included in PGAPack, as use of the PGAPack functionality is
 covered above (i.e. drop the <tt class="docutils literal"><span class="pre">ctx</span></tt> argument and <tt class="docutils literal"><span class="pre">PGA</span></tt> prefix).</p>
 <dl class="class">
 <dt id="PGA">
@@ -116,7 +120,7 @@ covered above (i.e. drop the <tt class="docutils literal"><span class="pre">ctx<
 <dt id="PGA.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>argv</em>, <em>datatype</em>, <em>n</em>, <em>direction</em><big>)</big><a class="headerlink" href="#PGA.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the PGA context.  This essentially wraps the PGACreate
-function, so see the pgapack documentation.</p>
+function, so see the PGAPack documentation.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -184,7 +188,7 @@ population <em>pop</em> .</p>
 <dd><p>Set a function for initializing strings.  The function <tt class="docutils literal"><span class="pre">f</span></tt> provided
 <strong>must</strong> have the signature <tt class="docutils literal"><span class="pre">f(p,</span> <span class="pre">pop)</span></tt>, but should almost certainly
 be an inerited class member with the signature <tt class="docutils literal"><span class="pre">f(self,</span> <span class="pre">p,</span> <span class="pre">pop)</span></tt>.
-See pgapack documentation for more about user functions.</p>
+See PGAPack documentation for more about user functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -206,7 +210,7 @@ See pgapack documentation for more about user functions.</p>
 <strong>must</strong> have the signature <tt class="docutils literal"><span class="pre">f(a,b,c,d,e,f)</span></tt>, but should almost
 certainly be an inerited class member with the signature
 <tt class="docutils literal"><span class="pre">f(self,a,b,c,d,e,f)</span></tt>.
-See pgapack documentation for more about user functions.</p>
+See PGAPack documentation for more about user functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -229,7 +233,7 @@ operator.</p>
 <strong>must</strong> have the signature <tt class="docutils literal"><span class="pre">f(p,</span> <span class="pre">pop,</span> <span class="pre">prob)</span></tt>, but should almost
 certainly be an inerited class member with the signature
 <tt class="docutils literal"><span class="pre">f(self,</span> <span class="pre">p,</span> <span class="pre">pop,</span> <span class="pre">prob)</span></tt>.
-See pgapack documentation for more about user functions.</p>
+See PGAPack documentation for more about user functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -253,7 +257,7 @@ generation.  The function <tt class="docutils literal"><span class="pre">f</span
 <strong>must</strong> have the signature <tt class="docutils literal"><span class="pre">f(pop)</span></tt>, but should almost certainly
 be an inerited class member with the signature <tt class="docutils literal"><span class="pre">f(self,</span> <span class="pre">pop)</span></tt>.
 Such an operator can be used to implement hill-climbing heuristics.
-See pgapack documentation for more about user functions.</p>
+See PGAPack documentation for more about user functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -292,6 +296,9 @@ generation operator.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="methods.html"
                         title="previous chapter">Methods</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="license.html"
+                        title="next chapter">License</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/api_reference.txt"
@@ -320,6 +327,9 @@ generation operator.</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="license.html" title="License"
+             >next</a> |</li>
         <li class="right" >
           <a href="methods.html" title="Methods"
              >previous</a> |</li>

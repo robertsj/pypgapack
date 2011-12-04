@@ -9,7 +9,7 @@
     
     <title>Examples &mdash; pypgapack 0.1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/proBlue.css" type="text/css" />
+    <link rel="stylesheet" href="_static/proBlue_mod.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -55,20 +55,22 @@
 <p>All examples are located in the <tt class="docutils literal"><span class="pre">pypgapack/examples</span></tt> and the
 reference output for all examples is in <tt class="docutils literal"><span class="pre">pypgapack/examples/output</span></tt>.
 Aside from small floating point differences, the values should be
-the same give the use of a fixed random number generator seed in
+the same given the use of a fixed random number generator seed in
 all the examples.  A utility script <tt class="docutils literal"><span class="pre">run_examples.py</span></tt> is included
-to test user output to the included reference cases.</p>
+to test user output to the included reference cases.  (Note, the above
+might actually be untrue, as compilation can and will change how
+a fixed pseudo-random number sequence is generated.)</p>
 <p>Also, the maximum generation count is limited to
 50 for all cases to produce short output.  Experiment with that limit
 to see better solutions.</p>
 <div class="section" id="basic-examples">
 <span id="sec-basicexamples"></span><h2>Basic Examples<a class="headerlink" href="#basic-examples" title="Permalink to this headline">¶</a></h2>
 <p>The following are some simple examples that illustrate
-the basic pgapack functionality.</p>
+the basic PGAPack functionality.</p>
 <div class="section" id="example-1-maxbit">
 <span id="sec-maxbitexample"></span><h3>Example 1: MAXBIT<a class="headerlink" href="#example-1-maxbit" title="Permalink to this headline">¶</a></h3>
 <p><tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt> is pretty easy to use, and to demonstrate, we&#8217;ll solve
-the maxbit problem, the first example in the pgapack documentation.</p>
+the maxbit problem, the first example in the PGAPack documentation.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -195,8 +197,7 @@ explicitly circumvents the issue.</p>
 34
 35
 36
-37
-38</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+37</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">pypgapack/examples/example02.py  --  maxint</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
@@ -211,11 +212,10 @@ explicitly circumvents the issue.</p>
 <span class="sd">        The maximum integer sum problem.</span>
 <span class="sd">    </span>
 <span class="sd">        The alleles are integers, and we solve</span>
-<span class="sd">        .. math:: </span>
-<span class="sd">          \max f(x) &amp;= \sum^N_{n=1} x_n \\</span>
-<span class="sd">              s.t.  &amp;= |x_i| \leq 100</span>
-<span class="sd">        That maximum is  :math:`f_{\textrm{max}}(x) = 100n` obtained for</span>
-<span class="sd">        :math:`x_i = 100, i = 1\ldots N`.</span>
+<span class="sd">            max f(x) = x_1 + x_2 + ... + x_N</span>
+<span class="sd">        subject to</span>
+<span class="sd">            |x_i| &lt;= 100 .</span>
+<span class="sd">        That maximum is f(x) = 100n obtained for x_i = 100 for all i.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>                       <span class="c">#   and sum it up.     </span>
@@ -423,14 +423,7 @@ permutation using Numpy.</p>
 40
 41
 42
-43
-44
-45
-46
-47
-48
-49
-50</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+43</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">pypgapack/examples/example04.py  --  maxint with user initialization</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
@@ -443,13 +436,6 @@ permutation using Numpy.</p>
     <span class="k">def</span> <span class="nf">maxint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The maximum integer sum problem.</span>
-<span class="sd">    </span>
-<span class="sd">        The alleles are integers, and we solve</span>
-<span class="sd">        .. math:: </span>
-<span class="sd">          \max f(x) &amp;= \sum^N_{n=1} x_n \\</span>
-<span class="sd">              s.t.  &amp;= |x_i| \leq 100</span>
-<span class="sd">        That maximum is  :math:`f_{\textrm{max}}(x) = 100n` obtained for</span>
-<span class="sd">        :math:`x_i = 100, i = 1\ldots N`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>                       <span class="c">#   and sum it up.     </span>
@@ -474,7 +460,7 @@ permutation using Numpy.</p>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>       <span class="c"># Do the same with Numpy.</span>
 <span class="n">u_b</span> <span class="o">=</span>  <span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c"># Define lower bound.</span>
 <span class="n">l_b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c"># Define upper bound.</span>
-<span class="c"># Set the bounds.  Note, need to cast as C-combatible integers.</span>
+<span class="c"># Set the bounds.  Note, need to cast as C-compatible integers.</span>
 <span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitRange</span><span class="p">(</span><span class="n">l_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">),</span> <span class="n">u_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">))</span> 
 <span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>    <span class="c"># 50 generations for short output.</span>
 <span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                  <span class="c"># Internal allocations, etc.</span>
@@ -511,7 +497,8 @@ Res</em>., <strong>22</strong>, (1995).  More importantly, it demonstrates use o
 user-defined crossover operator, namely the &#8220;Tie-Breaking
 Crossover&#8221; (TBX1) of the same work.</p>
 <p>The problem has 30 cities in a plane, and the goal is to minimize
-the distance traveled when visiting each city just once.
+the distance traveled when visiting each city just once in a complete
+loop.
 The problem has 40 equivalent optima, each with a distance of
 423.741 units.  The coordinates of the cities are in the code, and
 are from Oliver&#8217;s original paper by way of Steve Dower&#8217;s
@@ -646,16 +633,7 @@ matching the cited results.</p>
 126
 127
 128
-129
-130
-131
-132
-133</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on Dec 2, 2011</span>
-
-<span class="sd">@author: robertsj</span>
-<span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">&quot;&quot;&quot;</span>
+129</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">pypgapack/examples/example05.py  --  traveling salesman</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
@@ -668,7 +646,7 @@ matching the cited results.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">tsm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Hamiltonian traveling salesman problem.</span>
+<span class="sd">        Oliver&#39;s 30 city traveling salesman problem.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
@@ -696,13 +674,13 @@ matching the cited results.</p>
     
     <span class="k">def</span> <span class="nf">tbx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tie-breaking cross-over.  See Poon and Carter for details.</span>
+<span class="sd">        Tie-breaking cross-over.  See Poon and Carter for details. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Grab the city id&#39;s.</span>
         <span class="n">paren1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
         <span class="n">paren2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
-        <span class="n">child1</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>
-        <span class="n">child2</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> 
+        <span class="n">child1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>
+        <span class="n">child2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> 
         <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren1</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># DEBUG</span>
         <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren2</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># DEBUG</span>
          
@@ -726,7 +704,8 @@ matching the cited results.</p>
         <span class="n">point1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
         <span class="n">point2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span> 
         
-        <span class="c"># Exchange all alleles between the two points.</span>
+        <span class="c"># Exchange all alleles between the two points.  (It&#39;s unclear to me</span>
+        <span class="c">#   whether these points should be inclusive or not; here, they are.)</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">point2</span><span class="o">-</span><span class="n">point1</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">point1</span><span class="p">,</span> <span class="n">point2</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">point1</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -773,16 +752,16 @@ matching the cited results.</p>
                       <span class="mi">21</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">29</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
 <span class="k">print</span> <span class="s">&quot;Reference distance is: &quot;</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
 
-<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>        <span class="c"># Set seed for verification.</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>           <span class="c"># Do the same with Numpy.</span>
-<span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitPermute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c"># Start with random permutations. </span>
-<span class="n">opt</span><span class="o">.</span><span class="n">SetPopSize</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>         <span class="c"># Large enough to see some success.</span>
-<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>  <span class="c"># Small number for output.</span>
-<span class="n">opt</span><span class="o">.</span><span class="n">SetCrossover</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">tbx</span><span class="p">)</span>   <span class="c"># Set a cross-over operation.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                  <span class="c"># Set seed for verification.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                     <span class="c"># Do the same with Numpy.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitPermute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>     <span class="c"># Start with random permutations. </span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetPopSize</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>                   <span class="c"># Large enough to see some success.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>            <span class="c"># Small number for output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetCrossover</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">tbx</span><span class="p">)</span>             <span class="c"># Set a cross-over operation.</span>
 <span class="n">opt</span><span class="o">.</span><span class="n">SetMutation</span><span class="p">(</span><span class="n">PGA</span><span class="o">.</span><span class="n">MUTATION_PERMUTE</span><span class="p">)</span> <span class="c"># Mutate by permutation.</span>
-<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                 <span class="c"># Internal allocations, etc.</span>
-<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">tsm</span><span class="p">)</span>            <span class="c"># Set the objective and run.</span>
-<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>               <span class="c"># Clean up PGAPack internals.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                           <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">tsm</span><span class="p">)</span>                      <span class="c"># Set the objective and run.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>                         <span class="c"># Clean up PGAPack internals.</span>
 </pre></div>
 </td></tr></table></div>
 <p>Running it once yields the following output:</p>
@@ -870,11 +849,8 @@ operator, largely following the PGAPack example.</p>
 44
 45
 46
-47
-48
-49
-50</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">pypgapack/examples/example04.py  --  maxint with user initialization</span>
+47</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example06.py  --  maxint with user mutation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -886,32 +862,28 @@ operator, largely following the PGAPack example.</p>
     <span class="k">def</span> <span class="nf">maxint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The maximum integer sum problem.</span>
-<span class="sd">    </span>
-<span class="sd">        The alleles are integers, and we solve</span>
-<span class="sd">        .. math:: </span>
-<span class="sd">          \max f(x) &amp;= \sum^N_{n=1} x_n \\</span>
-<span class="sd">              s.t.  &amp;= |x_i| \leq 100</span>
-<span class="sd">        That maximum is  :math:`f_{\textrm{max}}(x) = 100n` obtained for</span>
-<span class="sd">        :math:`x_i = 100, i = 1\ldots N`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>                       <span class="c">#   and sum it up.     </span>
         <span class="k">del</span> <span class="n">c</span>                                 <span class="c"># Delete &quot;view&quot; to internals.</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                     <span class="c"># Always return a float.   </span>
 
-    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">pm</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Random permutations using Numpy.</span>
+<span class="sd">        Mutate randomly within -n to n</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">n</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
-        <span class="n">c</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
-        <span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">n</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
+        <span class="n">c</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">del</span> <span class="n">c</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">RandomFlip</span><span class="p">(</span><span class="n">pm</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RandomInterval</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">-</span><span class="n">n</span>
+                <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">del</span> <span class="n">c</span> 
+        <span class="k">return</span> <span class="n">count</span> 
         
 <span class="n">n</span>   <span class="o">=</span> <span class="mi">10</span>                <span class="c"># String length.</span>
-<span class="c"># (Command line arguments, integers, string length, and maximize it)</span>
 <span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_INTEGER</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 <span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>    <span class="c"># Set random seed for verification.</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>       <span class="c"># Do the same with Numpy.</span>
@@ -920,6 +892,7 @@ operator, largely following the PGAPack example.</p>
 <span class="c"># Set the bounds.  Note, need to cast as C-combatible integers.</span>
 <span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitRange</span><span class="p">(</span><span class="n">l_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">),</span> <span class="n">u_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">))</span> 
 <span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>    <span class="c"># 50 generations for short output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMutation</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">mutate</span><span class="p">)</span>  <span class="c"># Set a custom mutation.</span>
 <span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                  <span class="c"># Internal allocations, etc.</span>
 <span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">maxint</span><span class="p">)</span>          <span class="c"># Set the objective.</span>
 <span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>                <span class="c"># Clean up PGAPack internals.</span>
@@ -928,19 +901,19 @@ operator, largely following the PGAPack example.</p>
 <p>Running it yields the following output:</p>
 <div class="highlight-python"><pre>***Constructing PGA***
 Iter #     Field      Value
-10         Best       5.100000e+02
+10         Best       5.270000e+02
 Iter #     Field      Value
-20         Best       6.480000e+02
+20         Best       7.150000e+02
 Iter #     Field      Value
-30         Best       7.150000e+02
+30         Best       7.280000e+02
 Iter #     Field      Value
-40         Best       7.760000e+02
+40         Best       8.030000e+02
 Iter #     Field      Value
 50         Best       8.220000e+02
-The Best Evaluation: 8.220000e+02.
+The Best Evaluation: 8.360000e+02.
 The Best String:
-#    0: [      27], [     100], [      86], [      98], [      97], [      99]
-#    6: [      79], [      89], [      64], [      83]
+#    0: [      67], [      65], [      94], [      89], [      85], [      99]
+#    6: [      80], [      98], [      87], [      72]
 
 ***Destroying PGA context***
 </pre>
@@ -1231,7 +1204,7 @@ Elapsed time =  1.14050102234  seconds.
 </div>
 <p>This was using a dual core laptop with probably more browser
 windows open than needed, but the results look good.  Overall,
-pgapack focuses parallelism on the object function evaluation.
+PGAPack focuses parallelism on the object function evaluation.
 Hence, if your objective function is expensive to evaluate, you
 can expect relatively good scaling up to the number of strings
 replaced every generation (the default is 1/10 of the total).</p>
@@ -1248,7 +1221,7 @@ nature of the &#8220;swap&#8221; mutation is cited from another work I don&#8217
 hand, and the selection appears to be standard elitist, i.e all but
 the best is replaced.  I set a swap operator that always swaps
 a user-set number of pairs.  Using 3 pairs (i.e. 10%) seems
-to get close to the cited results.  Also, Because PGAPack doesn&#8217;t like
+to get close to the cited results.  Also, because PGAPack doesn&#8217;t like
 odd population sizes, I use 22.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
   2
@@ -1417,18 +1390,7 @@ odd population sizes, I use 22.</p>
 165
 166
 167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+168</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">pypgapack/examples/example09.py  --  traveling salesman in parallel</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
@@ -1442,7 +1404,7 @@ odd population sizes, I use 22.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">tsm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Hamiltonian traveling salesman problem.</span>
+<span class="sd">        Oliver&#39;s 30 city traveling salesman problem.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
@@ -1472,15 +1434,13 @@ odd population sizes, I use 22.</p>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tie-breaking cross-over.  See Poon and Carter for details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Grab the city id&#39;s by direct access to the memory.  This way,</span>
-        <span class="c">#   we can modify the contents directly, avoiding the &quot;set&quot;</span>
-        <span class="c">#   functions.</span>
+        <span class="c"># Grab the city id&#39;s.</span>
         <span class="n">paren1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
         <span class="n">paren2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
-        <span class="n">child1</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>
-        <span class="n">child2</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> 
-        <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren1</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># Ensure we haven&#39;t</span>
-        <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren2</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># in</span>
+        <span class="n">child1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>
+        <span class="n">child2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> 
+        <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren1</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># DEBUG</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren2</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># DEBUG</span>
          
         <span class="c"># String length.</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
@@ -1491,23 +1451,17 @@ odd population sizes, I use 22.</p>
             <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paren1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paren2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>               
         
-        <span class="c"># Code the parents using &quot;position listing&quot;.  For example, a string</span>
-        <span class="c">#   (2,1,3,0) </span>
-        <span class="c"># is represented as </span>
-        <span class="c">#   [4,2,1,3] .</span>
-        <span class="c"># Be careful, the algorithm is most straightforward using 1-indexing </span>
-        <span class="c"># rather than 0-indexing, but the id&#39;s are stored starting at 0.</span>
+        <span class="c"># Code the parents using &quot;position listing&quot;.</span>
         <span class="n">code1</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
         <span class="n">code2</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">code1</span><span class="p">[</span><span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">code2</span><span class="p">[</span><span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
         
-        <span class="c"># Randomly choose two cross-over points.  (Is there a Numpy </span>
-        <span class="c">#   function to select two that aren&#39;t the same?)</span>
+        <span class="c"># Randomly choose two cross-over points.</span>
         <span class="n">perm</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
         <span class="n">point1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
-        <span class="n">point2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span> <span class="c"># a:b does a up *to* b; want inclusive</span>
+        <span class="n">point2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span> 
         
         <span class="c"># Exchange all alleles between the two points.</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">point2</span><span class="o">-</span><span class="n">point1</span><span class="p">)</span>
@@ -1517,16 +1471,13 @@ odd population sizes, I use 22.</p>
             <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>     <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">point1</span><span class="p">]</span> 
         
         <span class="c"># Generate a cross-over map, a random ordering of the 0,1,...,n-1</span>
-        <span class="n">crossovermap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c"># could use old one</span>
+        <span class="n">crossovermap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> 
         
         <span class="c"># Multiply each allele of the strung by n and add the map.</span>
         <span class="n">parent1</span> <span class="o">=</span> <span class="n">parent1</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">crossovermap</span>
         <span class="n">parent2</span> <span class="o">=</span> <span class="n">parent2</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">crossovermap</span>
         
-        <span class="c"># Replace the lowest allele by 0, the next by 1, up to n-1.  Here,</span>
-        <span class="c">#   we sort the parents first, and then for each element, find</span>
-        <span class="c">#   where the increasing values are found in the original.  There</span>
-        <span class="c">#   is probably a simpler set of functions built in somewhere.</span>
+        <span class="c"># Replace the lowest allele by 0, the next by 1, up to n-1.</span>
         <span class="n">sort1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">parent1</span><span class="p">)</span>
         <span class="n">sort2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">parent2</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
@@ -1584,7 +1535,7 @@ odd population sizes, I use 22.</p>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numrun</span><span class="p">)</span> <span class="p">:</span>
     <span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_INTEGER</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MINIMIZE</span><span class="p">)</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">SetInitString</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">init</span><span class="p">)</span> <span class="c"># Set an initialization operator.</span>
-    <span class="n">opt</span><span class="o">.</span><span class="n">SetCrossoverProb</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>   <span class="c">#</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetCrossoverProb</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>   <span class="c"># (Default is 85%)</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">SetPopSize</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>          <span class="c"># 22 rather than 21</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">SetNumReplaceValue</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>  <span class="c"># Keep the best 22-21 = 1 string = elitist.</span>
     <span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>  <span class="c"># 300 generations, like the reference.</span>
