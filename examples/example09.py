@@ -12,7 +12,7 @@ class MyPGA(PGA) :
     """
     def tsm(self, p, pop) :
         """
-        Hamiltonian traveling salesman problem.
+        Oliver's 30 city traveling salesman problem.
         """
         c = self.GetIntegerChromosome(p, pop) # Get pth string as Numpy array 
         val = self.distance(c)
@@ -42,15 +42,13 @@ class MyPGA(PGA) :
         """
         Tie-breaking cross-over.  See Poon and Carter for details.
         """
-        # Grab the city id's by direct access to the memory.  This way,
-        #   we can modify the contents directly, avoiding the "set"
-        #   functions.
+        # Grab the city id's.
         paren1 = self.GetIntegerChromosome(p1, pop1)
         paren2 = self.GetIntegerChromosome(p2, pop1)
-        child1  = self.GetIntegerChromosome(c1, pop2)
-        child2  = self.GetIntegerChromosome(c2, pop2) 
-        assert(np.sum(paren1)==435) # Ensure we haven't
-        assert(np.sum(paren2)==435) # in
+        child1 = self.GetIntegerChromosome(c1, pop2)
+        child2 = self.GetIntegerChromosome(c2, pop2) 
+        assert(np.sum(paren1)==435) # DEBUG
+        assert(np.sum(paren2)==435) # DEBUG
          
         # String length.
         n = self.GetStringLength()
@@ -61,23 +59,17 @@ class MyPGA(PGA) :
             parent1[i] = paren1[i]
             parent2[i] = paren2[i]               
         
-        # Code the parents using "position listing".  For example, a string
-        #   (2,1,3,0) 
-        # is represented as 
-        #   [4,2,1,3] .
-        # Be careful, the algorithm is most straightforward using 1-indexing 
-        # rather than 0-indexing, but the id's are stored starting at 0.
+        # Code the parents using "position listing".
         code1   = np.zeros(n)
         code2   = np.zeros(n)
         for i in range(0, n) :
             code1[parent1[i]] = i + 1
             code2[parent2[i]] = i + 1
         
-        # Randomly choose two cross-over points.  (Is there a Numpy 
-        #   function to select two that aren't the same?)
+        # Randomly choose two cross-over points.
         perm   = np.random.permutation(n)
         point1 = np.min(perm[0:2])
-        point2 = np.max(perm[0:2])+1 # a:b does a up *to* b; want inclusive
+        point2 = np.max(perm[0:2])+1 
         
         # Exchange all alleles between the two points.
         temp = np.zeros(point2-point1)
@@ -87,16 +79,13 @@ class MyPGA(PGA) :
             parent2[i]     = temp[i-point1] 
         
         # Generate a cross-over map, a random ordering of the 0,1,...,n-1
-        crossovermap = np.random.permutation(n) # could use old one
+        crossovermap = np.random.permutation(n) 
         
         # Multiply each allele of the strung by n and add the map.
         parent1 = parent1*n + crossovermap
         parent2 = parent2*n + crossovermap
         
-        # Replace the lowest allele by 0, the next by 1, up to n-1.  Here,
-        #   we sort the parents first, and then for each element, find
-        #   where the increasing values are found in the original.  There
-        #   is probably a simpler set of functions built in somewhere.
+        # Replace the lowest allele by 0, the next by 1, up to n-1.
         sort1 = np.sort(parent1)
         sort2 = np.sort(parent2)
         for i in range(0, n) :
@@ -154,7 +143,7 @@ besteval = np.zeros(numrun)
 for i in range(0, numrun) :
     opt = MyPGA(sys.argv, PGA.DATATYPE_INTEGER, n, PGA.MINIMIZE)
     opt.SetInitString(opt.init) # Set an initialization operator.
-    opt.SetCrossoverProb(0.8)   #
+    opt.SetCrossoverProb(0.8)   # (Default is 85%)
     opt.SetPopSize(22)          # 22 rather than 21
     opt.SetNumReplaceValue(21)  # Keep the best 22-21 = 1 string = elitist.
     opt.SetMaxGAIterValue(300)  # 300 generations, like the reference.

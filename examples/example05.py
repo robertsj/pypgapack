@@ -1,8 +1,3 @@
-'''
-Created on Dec 2, 2011
-
-@author: robertsj
-'''
 """
 pypgapack/examples/example05.py  --  traveling salesman
 """
@@ -16,7 +11,7 @@ class MyPGA(PGA) :
     """
     def tsm(self, p, pop) :
         """
-        Hamiltonian traveling salesman problem.
+        Oliver's 30 city traveling salesman problem.
         """
         c = self.GetIntegerChromosome(p, pop) # Get pth string as Numpy array 
         val = self.distance(c)
@@ -44,13 +39,13 @@ class MyPGA(PGA) :
     
     def tbx(self, p1, p2, pop1, c1, c2, pop2) :
         """
-        Tie-breaking cross-over.  See Poon and Carter for details.
+        Tie-breaking cross-over.  See Poon and Carter for details. 
         """
         # Grab the city id's.
         paren1 = self.GetIntegerChromosome(p1, pop1)
         paren2 = self.GetIntegerChromosome(p2, pop1)
-        child1  = self.GetIntegerChromosome(c1, pop2)
-        child2  = self.GetIntegerChromosome(c2, pop2) 
+        child1 = self.GetIntegerChromosome(c1, pop2)
+        child2 = self.GetIntegerChromosome(c2, pop2) 
         assert(np.sum(paren1)==435) # DEBUG
         assert(np.sum(paren2)==435) # DEBUG
          
@@ -74,7 +69,8 @@ class MyPGA(PGA) :
         point1 = np.min(perm[0:2])
         point2 = np.max(perm[0:2])+1 
         
-        # Exchange all alleles between the two points.
+        # Exchange all alleles between the two points.  (It's unclear to me
+        #   whether these points should be inclusive or not; here, they are.)
         temp = np.zeros(point2-point1)
         for i in range(point1, point2) :
             temp[i-point1] = parent1[i]
@@ -121,13 +117,13 @@ reference = np.array([ 0, 2, 3, 4, 5, 6, 7, 8, 9,10, \
                       21,22,24,23,25,26,27,28,29, 1] )
 print "Reference distance is: ", opt.distance(reference)
 
-opt.SetRandomSeed(1)        # Set seed for verification.
-np.random.seed(1)           # Do the same with Numpy.
-opt.SetIntegerInitPermute(0, n-1) # Start with random permutations. 
-opt.SetPopSize(400)         # Large enough to see some success.
-opt.SetMaxGAIterValue(100)  # Small number for output.
-opt.SetCrossover(opt.tbx)   # Set a cross-over operation.
+opt.SetRandomSeed(1)                  # Set seed for verification.
+np.random.seed(1)                     # Do the same with Numpy.
+opt.SetIntegerInitPermute(0, n-1)     # Start with random permutations. 
+opt.SetPopSize(400)                   # Large enough to see some success.
+opt.SetMaxGAIterValue(100)            # Small number for output.
+opt.SetCrossover(opt.tbx)             # Set a cross-over operation.
 opt.SetMutation(PGA.MUTATION_PERMUTE) # Mutate by permutation.
-opt.SetUp()                 # Internal allocations, etc.
-opt.Run(opt.tsm)            # Set the objective and run.
-opt.Destroy()               # Clean up PGAPack internals.
+opt.SetUp()                           # Internal allocations, etc.
+opt.Run(opt.tsm)                      # Set the objective and run.
+opt.Destroy()                         # Clean up PGAPack internals.

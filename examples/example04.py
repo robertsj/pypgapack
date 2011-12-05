@@ -11,13 +11,6 @@ class MyPGA(PGA) :
     def maxint(self, p, pop) :
         """
         The maximum integer sum problem.
-    
-        The alleles are integers, and we solve
-        .. math:: 
-          \max f(x) &= \sum^N_{n=1} x_n \\
-              s.t.  &= |x_i| \leq 100
-        That maximum is  :math:`f_{\textrm{max}}(x) = 100n` obtained for
-        :math:`x_i = 100, i = 1\ldots N`.
         """
         c = self.GetIntegerChromosome(p, pop) # Get pth string as Numpy array 
         val = np.sum(c)                       #   and sum it up.     
@@ -42,7 +35,7 @@ opt.SetRandomSeed(1)    # Set random seed for verification.
 np.random.seed(1)       # Do the same with Numpy.
 u_b =  100*np.ones(n)   # Define lower bound.
 l_b = -100*np.ones(n)   # Define upper bound.
-# Set the bounds.  Note, need to cast as C-combatible integers.
+# Set the bounds.  Note, need to cast as C-compatible integers.
 opt.SetIntegerInitRange(l_b.astype('intc'), u_b.astype('intc')) 
 opt.SetMaxGAIterValue(50)    # 50 generations for short output.
 opt.SetUp()                  # Internal allocations, etc.

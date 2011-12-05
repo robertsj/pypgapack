@@ -13,11 +13,10 @@ class MyPGA(PGA) :
         The maximum integer sum problem.
     
         The alleles are integers, and we solve
-        .. math:: 
-          \max f(x) &= \sum^N_{n=1} x_n \\
-              s.t.  &= |x_i| \leq 100
-        That maximum is  :math:`f_{\textrm{max}}(x) = 100n` obtained for
-        :math:`x_i = 100, i = 1\ldots N`.
+            max f(x) = x_1 + x_2 + ... + x_N
+        subject to
+            |x_i| <= 100 .
+        That maximum is f(x) = 100n obtained for x_i = 100 for all i.
         """
         c = self.GetIntegerChromosome(p, pop) # Get pth string as Numpy array 
         val = np.sum(c)                       #   and sum it up.     
