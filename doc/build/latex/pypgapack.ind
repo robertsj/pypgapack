@@ -1,0 +1,23 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter {Symbols}
+  \item \_\_init\_\_() (PGA method), \hyperpage{26}
+
+  \indexspace
+  \bigletter G
+  \item GetIntegerChromosome() (PGA method), \hyperpage{26}
+  \item GetRealChromosome() (PGA method), \hyperpage{26}
+
+  \indexspace
+  \bigletter P
+  \item PGA (built-in class), \hyperpage{26}
+
+  \indexspace
+  \bigletter S
+  \item SetCrossover() (PGA method), \hyperpage{27}
+  \item SetEndOfGen() (PGA method), \hyperpage{27}
+  \item SetInitString() (PGA method), \hyperpage{26}
+  \item SetMutation() (PGA method), \hyperpage{27}
+
+\end{theindex}

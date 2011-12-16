@@ -1,0 +1,1695 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; pypgapack 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/proBlue_mod.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pypgapack 0.1.0 documentation" href="index.html" />
+    <link rel="next" title="Methods" href="methods.html" />
+    <link rel="prev" title="Getting Started With pypgapack" href="getting_started.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="methods.html" title="Methods"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="getting_started.html" title="Getting Started With pypgapack"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pypgapack 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<span id="sec-examples"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>All examples are located in the <tt class="docutils literal"><span class="pre">pypgapack/examples</span></tt> and the
+reference output for all examples is in <tt class="docutils literal"><span class="pre">pypgapack/examples/output</span></tt>.
+Aside from small floating point differences, the values should be
+the same given the use of a fixed random number generator seed in
+all the examples.  A utility script <tt class="docutils literal"><span class="pre">run_examples.py</span></tt> is included
+to test user output to the included reference cases.  (Note, the above
+might actually be untrue, as compilation can and will change how
+a fixed pseudo-random number sequence is generated.)</p>
+<p>Also, the maximum generation count is limited to
+50 for all cases to produce short output.  Experiment with that limit
+to see better solutions.</p>
+<div class="section" id="basic-examples">
+<span id="sec-basicexamples"></span><h2>Basic Examples<a class="headerlink" href="#basic-examples" title="Permalink to this headline">¶</a></h2>
+<p>The following are some simple examples that illustrate
+the basic PGAPack functionality.</p>
+<div class="section" id="example-1-maxbit">
+<span id="sec-maxbitexample"></span><h3>Example 1: MAXBIT<a class="headerlink" href="#example-1-maxbit" title="Permalink to this headline">¶</a></h3>
+<p><tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt> is pretty easy to use, and to demonstrate, we&#8217;ll solve
+the maxbit problem, the first example in the PGAPack documentation.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example01.py  --  maxbit</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">maxbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Maximum when all alleles are 1&#39;s, and that maximum is n. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c"># Size of the problem</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>               
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>               
+            <span class="c"># Check whether ith allele in string p is 1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetBinaryAllele</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> 
+                <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c"># Remember that fitness evaluations must return a float</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>      
+                
+<span class="c"># (Command line arguments, 1&#39;s and 0&#39;s, string length, and maximize it)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_BINARY</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>       <span class="c"># Set random seed for verification.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>  <span class="c"># 50 generations (default 1000) for short output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">maxbit</span><span class="p">)</span>        <span class="c"># Set the objective.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>              <span class="c"># Clean up PGAPack internals</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it yields the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+Iter #     Field      Value
+10         Best       6.900000e+01
+Iter #     Field      Value
+20         Best       7.200000e+01
+Iter #     Field      Value
+30         Best       7.600000e+01
+Iter #     Field      Value
+40         Best       7.700000e+01
+Iter #     Field      Value
+50         Best       8.000000e+01
+The Best Evaluation: 8.000000e+01.
+The Best String:
+[ 0111110111101111011111100111011110111101111111011111110100111111 ]
+[ 011111110111110111111110111101011011 ]
+***Destroying PGA context***
+</pre>
+</div>
+</div>
+<div class="section" id="example-2-maxint">
+<span id="sec-maxintexample"></span><h3>Example 2: MAXINT<a class="headerlink" href="#example-2-maxint" title="Permalink to this headline">¶</a></h3>
+<p>This is a similar problem, but the alleles are integers ranging
+from -100 to 100.  Note that when the integer ranges are
+set, a cast to <tt class="docutils literal"><span class="pre">intc</span></tt> is used.  Python uses high precision
+datatypes, and there doesn&#8217;t seem to be a safe implicit conversion
+between the Python integer type and the C integer type behind
+the scenes (in SWIG land).  Casting
+explicitly circumvents the issue.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example02.py  --  maxint</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">maxint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The maximum integer sum problem.</span>
+<span class="sd">    </span>
+<span class="sd">        The alleles are integers, and we solve</span>
+<span class="sd">            max f(x) = x_1 + x_2 + ... + x_N</span>
+<span class="sd">        subject to</span>
+<span class="sd">            |x_i| &lt;= 100 .</span>
+<span class="sd">        That maximum is f(x) = 100n obtained for x_i = 100 for all i.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>                       <span class="c">#   and sum it up.     </span>
+        <span class="k">del</span> <span class="n">c</span>                                 <span class="c"># Delete &quot;view&quot; to internals.</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                     <span class="c"># Always return a float.   </span>
+        
+<span class="n">n</span>   <span class="o">=</span> <span class="mi">10</span>                <span class="c"># String length.</span>
+<span class="c"># (Command line arguments, integers, string length, and maximize it)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_INTEGER</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>    <span class="c"># Set random seed for verification.</span>
+<span class="n">u_b</span> <span class="o">=</span>  <span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c"># Define lower bound.</span>
+<span class="n">l_b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c"># Define upper bound.</span>
+<span class="c"># Set the bounds.  Note, need to cast as C-combatible integers.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitRange</span><span class="p">(</span><span class="n">l_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">),</span> <span class="n">u_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">))</span> 
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>    <span class="c"># 50 generations for short output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                  <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">maxint</span><span class="p">)</span>          <span class="c"># Set the objective.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>                <span class="c"># Clean up PGAPack internals.</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it yields the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+Iter #     Field      Value
+10         Best       5.100000e+02
+Iter #     Field      Value
+20         Best       6.480000e+02
+Iter #     Field      Value
+30         Best       7.150000e+02
+Iter #     Field      Value
+40         Best       7.760000e+02
+Iter #     Field      Value
+50         Best       8.220000e+02
+The Best Evaluation: 8.220000e+02.
+The Best String:
+#    0: [      27], [     100], [      86], [      98], [      97], [      99]
+#    6: [      79], [      89], [      64], [      83]
+
+***Destroying PGA context***
+</pre>
+</div>
+</div>
+<div class="section" id="example-3-maxreal">
+<span id="sec-maxrealexample"></span><h3>Example 3: MAXREAL<a class="headerlink" href="#example-3-maxreal" title="Permalink to this headline">¶</a></h3>
+<p>This is the same problem, but for real alleles.  Here, note use
+of <tt class="xref py py-meth docutils literal"><span class="pre">SetMutationalType()</span></tt> with the option of <tt class="xref py py-const docutils literal"><span class="pre">PGA.MUTATION_RANGE</span></tt>.
+This forces mutated allele values to remain within the initial range
+specified, useful for cases with constrained inputs.  The default adds
+some (small) random amount, but over many iterations, this can cause allele
+values to go significantly beyond the initial range.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example03.py  --  maxreal</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">maxreal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The maximum real sum problem.</span>
+<span class="sd">    </span>
+<span class="sd">        The alleles are doubles, and we solve</span>
+<span class="sd">        .. math:: </span>
+<span class="sd">          \max f(x) &amp;= \sum^N_{n=1} x_n \\</span>
+<span class="sd">              s.t.  &amp;= |x_i| \leq 100</span>
+<span class="sd">        That maximum is  :math:`f_{\textrm{max}}(x) = 100n` obtained for</span>
+<span class="sd">        :math:`x_i = 100, i = 1\ldots N`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetRealChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>                    <span class="c">#   and sum it up.     </span>
+        <span class="k">del</span> <span class="n">c</span>                              <span class="c"># Delete &quot;view&quot; to internals.</span>
+        <span class="k">return</span> <span class="n">val</span>                         <span class="c"># Already a float.   </span>
+        
+<span class="n">n</span>   <span class="o">=</span> <span class="mi">10</span>              <span class="c"># String length.</span>
+<span class="c"># (Command line arguments, doubles, string length, and maximize it)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_REAL</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c"># Set random seed for verification.</span>
+<span class="n">u_b</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>  <span class="c"># Define lower bound.</span>
+<span class="n">l_b</span> <span class="o">=-</span><span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>  <span class="c"># Define upper bound.</span>
+<span class="c"># Set the bounds.  Default floats are handled without issue.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRealInitRange</span><span class="p">(</span><span class="n">l_b</span><span class="p">,</span> <span class="n">u_b</span><span class="p">)</span>
+<span class="c"># Force mutations to keep values in the initial range, a useful</span>
+<span class="c">#   feature for bound constraints.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMutationType</span><span class="p">(</span><span class="n">PGA</span><span class="o">.</span><span class="n">MUTATION_RANGE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="c"># 50 generations for short output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>               <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">maxreal</span><span class="p">)</span>      <span class="c"># Set the objective.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>             <span class="c"># Clean up PGAPack internals.</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it yields the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+Iter #     Field      Value
+10         Best       5.535524e+02
+Iter #     Field      Value
+20         Best       6.550377e+02
+Iter #     Field      Value
+30         Best       7.378405e+02
+Iter #     Field      Value
+40         Best       7.537097e+02
+Iter #     Field      Value
+50         Best       7.827324e+02
+The Best Evaluation: 7.827324e+02.
+The Best String:
+#   0: [   66.95374], [   47.92554], [    91.9023], [   75.87186], [   96.31829]
+#   5: [   85.24209], [   69.58556], [   90.59017], [   86.26947], [   72.07333]
+
+***Destroying PGA context***
+</pre>
+</div>
+</div>
+</div>
+<div class="section" id="examples-of-user-defined-operators">
+<span id="sec-useroperatorexamples"></span><h2>Examples of User Defined Operators<a class="headerlink" href="#examples-of-user-defined-operators" title="Permalink to this headline">¶</a></h2>
+<p>These examples explore one of the strengths of PGAPack,
+namely user-defined operators.</p>
+<div class="section" id="example-4-user-defined-string-initialization">
+<span id="sec-initstringexamples"></span><h3>Example 4: User-defined String Initialization<a class="headerlink" href="#example-4-user-defined-string-initialization" title="Permalink to this headline">¶</a></h3>
+<p>We redo <a class="reference internal" href="#sec-maxintexample"><em>Example 2: MAXINT</em></a> by initializing the strings
+with our own routine.  Here, that&#8217;s done by generating a
+permutation using Numpy.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example04.py  --  maxint with user initialization</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">maxint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The maximum integer sum problem.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>                       <span class="c">#   and sum it up.     </span>
+        <span class="k">del</span> <span class="n">c</span>                                 <span class="c"># Delete &quot;view&quot; to internals.</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                     <span class="c"># Always return a float.   </span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Random permutations using Numpy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
+        <span class="n">c</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">c</span>
+        
+<span class="n">n</span>   <span class="o">=</span> <span class="mi">10</span>                <span class="c"># String length.</span>
+<span class="c"># (Command line arguments, integers, string length, and maximize it)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_INTEGER</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>    <span class="c"># Set random seed for verification.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>       <span class="c"># Do the same with Numpy.</span>
+<span class="n">u_b</span> <span class="o">=</span>  <span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c"># Define lower bound.</span>
+<span class="n">l_b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c"># Define upper bound.</span>
+<span class="c"># Set the bounds.  Note, need to cast as C-compatible integers.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitRange</span><span class="p">(</span><span class="n">l_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">),</span> <span class="n">u_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">))</span> 
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>    <span class="c"># 50 generations for short output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                  <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">maxint</span><span class="p">)</span>          <span class="c"># Set the objective.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>                <span class="c"># Clean up PGAPack internals.</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it yields the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+Iter #     Field      Value
+10         Best       5.100000e+02
+Iter #     Field      Value
+20         Best       6.480000e+02
+Iter #     Field      Value
+30         Best       7.150000e+02
+Iter #     Field      Value
+40         Best       7.760000e+02
+Iter #     Field      Value
+50         Best       8.220000e+02
+The Best Evaluation: 8.220000e+02.
+The Best String:
+#    0: [      27], [     100], [      86], [      98], [      97], [      99]
+#    6: [      79], [      89], [      64], [      83]
+
+***Destroying PGA context***
+</pre>
+</div>
+</div>
+<div class="section" id="example-5-user-defined-crossover-operator">
+<span id="sec-crossoverexamples"></span><h3>Example 5: User-defined Crossover Operator<a class="headerlink" href="#example-5-user-defined-crossover-operator" title="Permalink to this headline">¶</a></h3>
+<p>This example solves &#8220;Oliver&#8217;s 30-city Hamiltonian cycle Traveling
+Salesman Problem&#8221;, as described in Poon and Carter, <em>Computer Ops
+Res</em>., <strong>22</strong>, (1995).  More importantly, it demonstrates use of a
+user-defined crossover operator, namely the &#8220;Tie-Breaking
+Crossover&#8221; (TBX1) of the same work.</p>
+<p>The problem has 30 cities in a plane, and the goal is to minimize
+the distance traveled when visiting each city just once in a complete
+loop.
+The problem has 40 equivalent optima, each with a distance of
+423.741 units.  The coordinates of the cities are in the code, and
+are from Oliver&#8217;s original paper by way of Steve Dower&#8217;s
+<a class="reference external" href="http://www.stevedower.id.au/other/oliver30">site</a>.  See
+<a class="reference internal" href="#sec-parallelexamples"><em>Parallel Examples</em></a> for a parallel version that tries
+matching the cited results.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example05.py  --  traveling salesman</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">tsm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Oliver&#39;s 30 city traveling salesman problem.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">c</span>
+        <span class="k">return</span> <span class="n">val</span>
+    
+    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the total distance for a set of cities.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># x and y coordinates by city</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">54.0</span><span class="p">,</span><span class="mf">54.0</span><span class="p">,</span><span class="mf">37.0</span><span class="p">,</span><span class="mf">41.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span><span class="mf">25.0</span><span class="p">,</span><span class="mf">22.0</span><span class="p">,</span><span class="mf">18.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span>\
+                      <span class="mf">13.0</span><span class="p">,</span><span class="mf">18.0</span><span class="p">,</span><span class="mf">24.0</span><span class="p">,</span><span class="mf">25.0</span><span class="p">,</span><span class="mf">44.0</span><span class="p">,</span><span class="mf">41.0</span><span class="p">,</span><span class="mf">45.0</span><span class="p">,</span><span class="mf">58.0</span><span class="p">,</span><span class="mf">62.0</span><span class="p">,</span><span class="mf">82.0</span><span class="p">,</span>\
+                      <span class="mf">91.0</span><span class="p">,</span><span class="mf">83.0</span><span class="p">,</span><span class="mf">71.0</span><span class="p">,</span><span class="mf">64.0</span><span class="p">,</span><span class="mf">68.0</span><span class="p">,</span><span class="mf">83.0</span><span class="p">,</span><span class="mf">87.0</span><span class="p">,</span><span class="mf">74.0</span><span class="p">,</span><span class="mf">71.0</span><span class="p">,</span><span class="mf">58.0</span><span class="p">])</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">67.0</span><span class="p">,</span><span class="mf">62.0</span><span class="p">,</span><span class="mf">84.0</span><span class="p">,</span><span class="mf">94.0</span><span class="p">,</span><span class="mf">99.0</span><span class="p">,</span><span class="mf">64.0</span><span class="p">,</span><span class="mf">62.0</span><span class="p">,</span><span class="mf">60.0</span><span class="p">,</span><span class="mf">54.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">,</span>\
+                      <span class="mf">40.0</span><span class="p">,</span><span class="mf">40.0</span><span class="p">,</span><span class="mf">42.0</span><span class="p">,</span><span class="mf">38.0</span><span class="p">,</span><span class="mf">35.0</span><span class="p">,</span><span class="mf">26.0</span><span class="p">,</span><span class="mf">21.0</span><span class="p">,</span><span class="mf">35.0</span><span class="p">,</span><span class="mf">32.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span>\
+                      <span class="mf">38.0</span><span class="p">,</span><span class="mf">46.0</span><span class="p">,</span><span class="mf">44.0</span><span class="p">,</span><span class="mf">60.0</span><span class="p">,</span><span class="mf">58.0</span><span class="p">,</span><span class="mf">69.0</span><span class="p">,</span><span class="mf">76.0</span><span class="p">,</span><span class="mf">78.0</span><span class="p">,</span><span class="mf">71.0</span><span class="p">,</span><span class="mf">69.0</span><span class="p">])</span>
+        <span class="n">n</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>   
+        <span class="n">val</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">val</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+        <span class="n">val</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">val</span> <span class="o">&gt;</span> <span class="mf">423.70</span><span class="p">)</span> <span class="c"># DEBUG.</span>
+        <span class="k">return</span> <span class="n">val</span>
+    
+    <span class="k">def</span> <span class="nf">tbx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tie-breaking cross-over.  See Poon and Carter for details. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Grab the city id&#39;s.</span>
+        <span class="n">paren1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
+        <span class="n">paren2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
+        <span class="n">child1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>
+        <span class="n">child2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> 
+        <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren1</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># DEBUG</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren2</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># DEBUG</span>
+         
+        <span class="c"># Copy the parents to temporary vector for manipulation.</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
+        <span class="n">parent1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">parent2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paren1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paren2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>               
+        
+        <span class="c"># Code the parents using &quot;position listing&quot;.</span>
+        <span class="n">code1</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">code2</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">code1</span><span class="p">[</span><span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">code2</span><span class="p">[</span><span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        
+        <span class="c"># Randomly choose two cross-over points. </span>
+        <span class="n">perm</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">point1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">point2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span> 
+        
+        <span class="c"># Exchange all alleles between the two points.  (It&#39;s unclear to me</span>
+        <span class="c">#   whether these points should be inclusive or not; here, they are.)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">point2</span><span class="o">-</span><span class="n">point1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">point1</span><span class="p">,</span> <span class="n">point2</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">point1</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>     <span class="o">=</span> <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>     <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">point1</span><span class="p">]</span> 
+        
+        <span class="c"># Generate a cross-over map, a random ordering of the 0,1,...,n-1</span>
+        <span class="n">crossovermap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> 
+        
+        <span class="c"># Multiply each allele of the strung by n and add the map.</span>
+        <span class="n">parent1</span> <span class="o">=</span> <span class="n">parent1</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">crossovermap</span>
+        <span class="n">parent2</span> <span class="o">=</span> <span class="n">parent2</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">crossovermap</span>
+        
+        <span class="c"># Replace the lowest allele by 0, the next by 1, up to n-1.  Here,</span>
+        <span class="c">#   we sort the parents first, and then for each element, find</span>
+        <span class="c">#   where the increasing values are found in the original.  There</span>
+        <span class="c">#   is probably a simpler set of functions built in somewhere.</span>
+        <span class="n">sort1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">parent1</span><span class="p">)</span>
+        <span class="n">sort2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">parent2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">parent1</span> <span class="o">==</span> <span class="n">sort1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">parent2</span> <span class="o">==</span> <span class="n">sort2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> 
+            
+        <span class="c"># Map the string back to elements.  These are the offspring.</span>
+        <span class="n">tempchild1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">tempchild2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tempchild1</span><span class="p">[</span><span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">tempchild2</span><span class="p">[</span><span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>            
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">child1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tempchild1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">child2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tempchild2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>       
+  
+<span class="c"># Number of cities.                    </span>
+<span class="n">n</span>   <span class="o">=</span> <span class="mi">30</span>    
+
+<span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_INTEGER</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MINIMIZE</span><span class="p">)</span> 
+    
+<span class="c"># One possible benchmark solution</span>
+<span class="n">reference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> \
+                      <span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span> \
+                      <span class="mi">21</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">29</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Reference distance is: &quot;</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                  <span class="c"># Set seed for verification.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                     <span class="c"># Do the same with Numpy.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitPermute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>     <span class="c"># Start with random permutations. </span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetPopSize</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>                   <span class="c"># Large enough to see some success.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>            <span class="c"># Small number for output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetCrossover</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">tbx</span><span class="p">)</span>             <span class="c"># Set a cross-over operation.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMutation</span><span class="p">(</span><span class="n">PGA</span><span class="o">.</span><span class="n">MUTATION_PERMUTE</span><span class="p">)</span> <span class="c"># Mutate by permutation.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                           <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">tsm</span><span class="p">)</span>                      <span class="c"># Set the objective and run.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>                         <span class="c"># Clean up PGAPack internals.</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it once yields the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+Reference distance is:  423.740563133
+Iter #     Field      Value
+10         Best       1.012977e+03
+Iter #     Field      Value
+20         Best       9.924890e+02
+Iter #     Field      Value
+30         Best       9.924890e+02
+Iter #     Field      Value
+40         Best       9.924890e+02
+Iter #     Field      Value
+50         Best       9.419172e+02
+Iter #     Field      Value
+60         Best       8.709637e+02
+Iter #     Field      Value
+70         Best       8.709637e+02
+Iter #     Field      Value
+80         Best       8.524659e+02
+Iter #     Field      Value
+90         Best       8.524659e+02
+Iter #     Field      Value
+100        Best       7.805903e+02
+The Best Evaluation: 7.805903e+02.
+The Best String:
+#    0: [      29], [       3], [       0], [      12], [      13], [       9]
+#    6: [       4], [       8], [      11], [      10], [       5], [       6]
+#   12: [       7], [      17], [      14], [      18], [      16], [      15]
+#   18: [      26], [      24], [      22], [      19], [      21], [      25]
+#   24: [      27], [      23], [      20], [      28], [       2], [       1]
+
+***Destroying PGA context***
+</pre>
+</div>
+</div>
+<div class="section" id="example-6-user-defined-mutation-operator">
+<span id="sec-mutationexamples"></span><h3>Example 6: User-defined Mutation Operator<a class="headerlink" href="#example-6-user-defined-mutation-operator" title="Permalink to this headline">¶</a></h3>
+<p>We redo <a class="reference internal" href="#sec-maxintexample"><em>Example 2: MAXINT</em></a> using a custom mutation
+operator, largely following the PGAPack example.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example06.py  --  maxint with user mutation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">maxint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The maximum integer sum problem.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>                       <span class="c">#   and sum it up.     </span>
+        <span class="k">del</span> <span class="n">c</span>                                 <span class="c"># Delete &quot;view&quot; to internals.</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>                     <span class="c"># Always return a float.   </span>
+
+    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">pm</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mutate randomly within -n to n</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
+        <span class="n">c</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">RandomFlip</span><span class="p">(</span><span class="n">pm</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RandomInterval</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">-</span><span class="n">n</span>
+                <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">del</span> <span class="n">c</span> 
+        <span class="k">return</span> <span class="n">count</span> 
+        
+<span class="n">n</span>   <span class="o">=</span> <span class="mi">10</span>                <span class="c"># String length.</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_INTEGER</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>    <span class="c"># Set random seed for verification.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>       <span class="c"># Do the same with Numpy.</span>
+<span class="n">u_b</span> <span class="o">=</span>  <span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c"># Define lower bound.</span>
+<span class="n">l_b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>   <span class="c"># Define upper bound.</span>
+<span class="c"># Set the bounds.  Note, need to cast as C-combatible integers.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitRange</span><span class="p">(</span><span class="n">l_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">),</span> <span class="n">u_b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;intc&#39;</span><span class="p">))</span> 
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>    <span class="c"># 50 generations for short output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMutation</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">mutate</span><span class="p">)</span>  <span class="c"># Set a custom mutation.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                  <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">maxint</span><span class="p">)</span>          <span class="c"># Set the objective.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>                <span class="c"># Clean up PGAPack internals.</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it yields the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+Iter #     Field      Value
+10         Best       5.270000e+02
+Iter #     Field      Value
+20         Best       7.150000e+02
+Iter #     Field      Value
+30         Best       7.280000e+02
+Iter #     Field      Value
+40         Best       8.030000e+02
+Iter #     Field      Value
+50         Best       8.220000e+02
+The Best Evaluation: 8.360000e+02.
+The Best String:
+#    0: [      67], [      65], [      94], [      89], [      85], [      99]
+#    6: [      80], [      98], [      87], [      72]
+
+***Destroying PGA context***
+</pre>
+</div>
+</div>
+<div class="section" id="example-7-user-defined-end-of-generation-operator">
+<span id="sec-endofgenexamples"></span><h3>Example 7: User-defined End of Generation Operator<a class="headerlink" href="#example-7-user-defined-end-of-generation-operator" title="Permalink to this headline">¶</a></h3>
+<p>This example is almost the same as <a class="reference internal" href="#sec-maxbitexample"><em>Example 1: MAXBIT</em></a> but it
+adds an end-of-generation operator.  Here, we&#8217;re using it to
+flip a random bit to 1.  Of course, since we&#8217;re maximizing the
+bit sum, this is &#8220;climbing the hill&#8221; to a better answer.  This is
+a trivial example of such heuristics; in other situations, there are
+more complex, physically-motivated approaches.  Another use of an
+end-of-generation operator would be for post-generation processing,
+such as plotting fitnesses, writing to file, etc.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example07.py  --  maxbit with end-of-generation hill climb</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">maxbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Maximum when all alleles are 1&#39;s, and that maximum is n. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c"># Size of the problem</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>               
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>               
+            <span class="c"># Check whether ith allele in string p is 1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetBinaryAllele</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> 
+                <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c"># Remember that fitness evaluations must return a float</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>      
+    <span class="k">def</span> <span class="nf">climb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Randomly set a bit to 1 in each string </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">popsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetPopSize</span><span class="p">()</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>   
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">popsize</span><span class="p">)</span> <span class="p">:</span>  
+            <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RandomInterval</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SetBinaryAllele</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">NEWPOP</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                      
+<span class="c"># (Command line arguments, 1&#39;s and 0&#39;s, string length, and maximize it)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_BINARY</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>       <span class="c"># Set random seed for verification.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>  <span class="c"># 50 generations (default 1000) for short output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetEndOfGen</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">climb</span><span class="p">)</span> <span class="c"># Set a hill climbing heuristic</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">maxbit</span><span class="p">)</span>        <span class="c"># Set the objective.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>              <span class="c"># Clean up PGAPack internals</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it yields the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+Iter #     Field      Value
+10         Best       7.000000e+01
+Iter #     Field      Value
+20         Best       7.600000e+01
+Iter #     Field      Value
+30         Best       8.300000e+01
+Iter #     Field      Value
+40         Best       8.800000e+01
+Iter #     Field      Value
+50         Best       9.100000e+01
+The Best Evaluation: 9.300000e+01.
+The Best String:
+[ 1111111111111111111011111111111111111011111011011111011111110111 ]
+[ 111111111111111111111111101111111111 ]
+***Destroying PGA context***
+</pre>
+</div>
+<p>Notice that for the same settings, the heuristic improved the best
+solution a little bit.  Of course, flipping just one bit out of
+100 shouldn&#8217;t be expected to work miracles.</p>
+</div>
+</div>
+<div class="section" id="parallel-examples">
+<span id="sec-parallelexamples"></span><h2>Parallel Examples<a class="headerlink" href="#parallel-examples" title="Permalink to this headline">¶</a></h2>
+<p>The following examples illustrate use of <tt class="xref py py-mod docutils literal"><span class="pre">pypgapack</span></tt> in
+a parallel setting using the <tt class="docutils literal"><span class="pre">mpi4py</span></tt> package.</p>
+<div class="section" id="example-8-parallel-maxbit">
+<h3>Example 8: Parallel MAXBIT<a class="headerlink" href="#example-8-parallel-maxbit" title="Permalink to this headline">¶</a></h3>
+<p>We adapt our favorite <a class="reference internal" href="#sec-maxbitexample"><em>Example 1: MAXBIT</em></a> using MPI.  We up
+the string length and population to bring out timing differences.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example08.py  --  parallel maxbit</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">maxbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Maximum when all alleles are 1&#39;s, and that maximum is n. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c"># Size of the problem</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>               
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>               
+            <span class="c"># Check whether ith allele in string p is 1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetBinaryAllele</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> 
+                <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c"># Remember that fitness evaluations must return a float</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>    
+
+<span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>           <span class="c"># Get the communicator.</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>          <span class="c"># Get my rank.  </span>
+<span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>                  <span class="c"># Just to show it works, have node 0</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="mi">1</span>                    <span class="c">#   set seed=1 and n=500 and have all</span>
+    <span class="n">n</span>    <span class="o">=</span> <span class="mi">500</span>
+<span class="k">else</span> <span class="p">:</span>                          <span class="c">#   other nodes set seed=n=0.  Then,</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span>                    <span class="c">#   broadcast them to all nodes with</span>
+    <span class="n">n</span>    <span class="o">=</span> <span class="mi">0</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c">#   node 0 as the root process,</span>
+<span class="n">n</span>    <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="n">n</span><span class="p">,</span>    <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c">#   and verify by printing.</span>
+<span class="k">print</span> <span class="s">&quot; node=&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="s">&quot; seed=&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="s">&quot; n=&quot;</span><span class="p">,</span> <span class="n">n</span>
+
+<span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+    <span class="n">t_start</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>  <span class="c"># Start the clock.</span>
+<span class="c"># (Command line arguments, 1&#39;s and 0&#39;s, string length, and maximize it)</span>
+<span class="n">opt</span>  <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_BINARY</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetPopSize</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>        <span class="c"># Set random seed for verification.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>      <span class="c"># 50 generations for short output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                    <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">maxbit</span><span class="p">)</span>            <span class="c"># Set the objective.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>                  <span class="c"># Clean up PGAPack internals</span>
+<span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+    <span class="n">t_end</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Elapsed time = &quot;</span><span class="p">,</span> <span class="n">t_end</span><span class="o">-</span><span class="n">t_start</span><span class="p">,</span> <span class="s">&quot; seconds.&quot;</span>
+<span class="n">MPI</span><span class="o">.</span><span class="n">Finalize</span><span class="p">()</span> <span class="c"># Should be called automatically, but good practice.</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it using <tt class="docutils literal"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">1</span> <span class="pre">python</span> <span class="pre">example08.py</span></tt> yields
+the following output:</p>
+<div class="highlight-python"><pre> node= 0  seed= 1  n= 500
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       2.930000e+02
+Iter #     Field      Value
+20         Best       3.030000e+02
+Iter #     Field      Value
+30         Best       3.080000e+02
+Iter #     Field      Value
+40         Best       3.240000e+02
+Iter #     Field      Value
+50         Best       3.280000e+02
+The Best Evaluation: 3.290000e+02.
+The Best String:
+[ 1001010110110110111110111110110010101110101111011000110111000111 ]
+[ 1111111101101111111110100101100011101110011111110110110011110001 ]
+[ 1010100111101111111111101110101100111111110101100110011111111001 ]
+[ 0101011111111100011111111110110111011001111011110111011010110000 ]
+[ 1011110100011110010110010110011011111001010001001011000101101111 ]
+[ 0111101101111100111101011100111111010110111111100101110010110111 ]
+[ 1011000101110001111100011111110111110100101110000010010011100010 ]
+[ 1011101100101110111001110000011111111111101101111111 ]
+***Destroying PGA context***
+Elapsed time =  2.06364393234  seconds.
+</pre>
+</div>
+<p>Running it using <tt class="docutils literal"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">2</span> <span class="pre">python</span> <span class="pre">example08.py</span></tt> yields
+the following output:</p>
+<div class="highlight-python"><pre> node= 0  seed= 1  n= 500
+***Constructing PGA***
+ node= 1  seed= 1  n= 500
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       2.930000e+02
+Iter #     Field      Value
+20         Best       3.030000e+02
+Iter #     Field      Value
+30         Best       3.080000e+02
+Iter #     Field      Value
+40         Best       3.240000e+02
+Iter #     Field      Value
+50         Best       3.280000e+02
+***Destroying PGA context***
+The Best Evaluation: 3.290000e+02.
+The Best String:
+[ 1001010110110110111110111110110010101110101111011000110111000111 ]
+[ 1111111101101111111110100101100011101110011111110110110011110001 ]
+[ 1010100111101111111111101110101100111111110101100110011111111001 ]
+[ 0101011111111100011111111110110111011001111011110111011010110000 ]
+[ 1011110100011110010110010110011011111001010001001011000101101111 ]
+[ 0111101101111100111101011100111111010110111111100101110010110111 ]
+[ 1011000101110001111100011111110111110100101110000010010011100010 ]
+[ 1011101100101110111001110000011111111111101101111111 ]
+***Destroying PGA context***
+Elapsed time =  1.14050102234  seconds.
+</pre>
+</div>
+<p>This was using a dual core laptop with probably more browser
+windows open than needed, but the results look good.  Overall,
+PGAPack focuses parallelism on the object function evaluation.
+Hence, if your objective function is expensive to evaluate, you
+can expect relatively good scaling up to the number of strings
+replaced every generation (the default is 1/10 of the total).</p>
+</div>
+<div class="section" id="example-9-parallel-traveling-salesman">
+<h3>Example 9: Parallel Traveling Salesman<a class="headerlink" href="#example-9-parallel-traveling-salesman" title="Permalink to this headline">¶</a></h3>
+<p>We adapt the Traveling Salesman Problem to parallel and try
+matching the results Poon and Carter found for the TBX1
+cross-over operator.  The GA
+parameters used by Poon and Carter are not entirely clear.  They
+cite results for a population of 21 over 300 iterations with a
+cross-over to mutation probability ratio of 0.8/0.2.  The exact
+nature of the &#8220;swap&#8221; mutation is cited from another work I don&#8217;t have at
+hand, and the selection appears to be standard elitist, i.e all but
+the best is replaced.  I set a swap operator that always swaps
+a user-set number of pairs.  Using 3 pairs (i.e. 10%) seems
+to get close to the cited results.  Also, because PGAPack doesn&#8217;t like
+odd population sizes, I use 22.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example09.py  --  traveling salesman in parallel</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">tsm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Oliver&#39;s 30 city traveling salesman problem.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="c"># Get pth string as Numpy array </span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">c</span>
+        <span class="k">return</span> <span class="n">val</span>
+    
+    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the total distance for a set of cities.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># x and y coordinates by city</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">54.0</span><span class="p">,</span><span class="mf">54.0</span><span class="p">,</span><span class="mf">37.0</span><span class="p">,</span><span class="mf">41.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span><span class="mf">25.0</span><span class="p">,</span><span class="mf">22.0</span><span class="p">,</span><span class="mf">18.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span>\
+                      <span class="mf">13.0</span><span class="p">,</span><span class="mf">18.0</span><span class="p">,</span><span class="mf">24.0</span><span class="p">,</span><span class="mf">25.0</span><span class="p">,</span><span class="mf">44.0</span><span class="p">,</span><span class="mf">41.0</span><span class="p">,</span><span class="mf">45.0</span><span class="p">,</span><span class="mf">58.0</span><span class="p">,</span><span class="mf">62.0</span><span class="p">,</span><span class="mf">82.0</span><span class="p">,</span>\
+                      <span class="mf">91.0</span><span class="p">,</span><span class="mf">83.0</span><span class="p">,</span><span class="mf">71.0</span><span class="p">,</span><span class="mf">64.0</span><span class="p">,</span><span class="mf">68.0</span><span class="p">,</span><span class="mf">83.0</span><span class="p">,</span><span class="mf">87.0</span><span class="p">,</span><span class="mf">74.0</span><span class="p">,</span><span class="mf">71.0</span><span class="p">,</span><span class="mf">58.0</span><span class="p">])</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">67.0</span><span class="p">,</span><span class="mf">62.0</span><span class="p">,</span><span class="mf">84.0</span><span class="p">,</span><span class="mf">94.0</span><span class="p">,</span><span class="mf">99.0</span><span class="p">,</span><span class="mf">64.0</span><span class="p">,</span><span class="mf">62.0</span><span class="p">,</span><span class="mf">60.0</span><span class="p">,</span><span class="mf">54.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">,</span>\
+                      <span class="mf">40.0</span><span class="p">,</span><span class="mf">40.0</span><span class="p">,</span><span class="mf">42.0</span><span class="p">,</span><span class="mf">38.0</span><span class="p">,</span><span class="mf">35.0</span><span class="p">,</span><span class="mf">26.0</span><span class="p">,</span><span class="mf">21.0</span><span class="p">,</span><span class="mf">35.0</span><span class="p">,</span><span class="mf">32.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span>\
+                      <span class="mf">38.0</span><span class="p">,</span><span class="mf">46.0</span><span class="p">,</span><span class="mf">44.0</span><span class="p">,</span><span class="mf">60.0</span><span class="p">,</span><span class="mf">58.0</span><span class="p">,</span><span class="mf">69.0</span><span class="p">,</span><span class="mf">76.0</span><span class="p">,</span><span class="mf">78.0</span><span class="p">,</span><span class="mf">71.0</span><span class="p">,</span><span class="mf">69.0</span><span class="p">])</span>
+        <span class="n">n</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>   
+        <span class="n">val</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">val</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+        <span class="n">val</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">val</span> <span class="o">&gt;</span> <span class="mf">423.70</span><span class="p">)</span> <span class="c"># Debug.</span>
+        <span class="k">return</span> <span class="n">val</span>
+    
+    <span class="k">def</span> <span class="nf">tbx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tie-breaking cross-over.  See Poon and Carter for details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Grab the city id&#39;s.</span>
+        <span class="n">paren1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
+        <span class="n">paren2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
+        <span class="n">child1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>
+        <span class="n">child2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> 
+        <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren1</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># DEBUG</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">paren2</span><span class="p">)</span><span class="o">==</span><span class="mi">435</span><span class="p">)</span> <span class="c"># DEBUG</span>
+         
+        <span class="c"># String length.</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
+        <span class="n">parent1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">parent2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                     
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paren1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paren2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>               
+        
+        <span class="c"># Code the parents using &quot;position listing&quot;.</span>
+        <span class="n">code1</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">code2</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">code1</span><span class="p">[</span><span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">code2</span><span class="p">[</span><span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        
+        <span class="c"># Randomly choose two cross-over points.</span>
+        <span class="n">perm</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">point1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">point2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span> 
+        
+        <span class="c"># Exchange all alleles between the two points.</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">point2</span><span class="o">-</span><span class="n">point1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">point1</span><span class="p">,</span> <span class="n">point2</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">point1</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>     <span class="o">=</span> <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>     <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">point1</span><span class="p">]</span> 
+        
+        <span class="c"># Generate a cross-over map, a random ordering of the 0,1,...,n-1</span>
+        <span class="n">crossovermap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> 
+        
+        <span class="c"># Multiply each allele of the strung by n and add the map.</span>
+        <span class="n">parent1</span> <span class="o">=</span> <span class="n">parent1</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">crossovermap</span>
+        <span class="n">parent2</span> <span class="o">=</span> <span class="n">parent2</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">crossovermap</span>
+        
+        <span class="c"># Replace the lowest allele by 0, the next by 1, up to n-1.</span>
+        <span class="n">sort1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">parent1</span><span class="p">)</span>
+        <span class="n">sort2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">parent2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">parent1</span> <span class="o">==</span> <span class="n">sort1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">parent2</span> <span class="o">==</span> <span class="n">sort2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> 
+        
+        <span class="n">tmpc1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">tmpc2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="c"># Map the string back to elements.  These are the offspring.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tmpc1</span><span class="p">[</span><span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">tmpc2</span><span class="p">[</span><span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>            
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">child1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpc1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">child2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpc2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>       
+  
+    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">pm</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Random swap of allele pairs.  Note, nswap must be set!</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
+        <span class="n">c</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nswap</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">i1</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span>  <span class="p">]</span>
+            <span class="n">i2</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">tmp1</span>      <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span>
+            <span class="n">tmp2</span>      <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">i2</span><span class="p">]</span>
+            <span class="n">c</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span>     <span class="o">=</span> <span class="n">tmp2</span>  
+            <span class="n">c</span><span class="p">[</span><span class="n">i2</span><span class="p">]</span>     <span class="o">=</span> <span class="n">tmp1</span>
+        <span class="k">del</span> <span class="n">c</span> 
+        <span class="k">return</span> <span class="mi">0</span> 
+            
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Random initial states.  We do this so that we can enforce the same</span>
+<span class="sd">        initial guesses for all runs to compare against the Poon and Carter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">c</span>
+         
+<span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>           <span class="c"># Get the communicator.</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>          <span class="c"># Get my rank.  </span>
+<span class="n">t_start</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>           <span class="c"># Start the clock. </span>
+<span class="n">n</span>        <span class="o">=</span> <span class="mi">30</span>                   <span class="c"># Number of cities.              </span>
+<span class="n">numrun</span>   <span class="o">=</span> <span class="mi">25</span>                   <span class="c"># Number of runs to average.</span>
+<span class="n">besteval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numrun</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numrun</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_INTEGER</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MINIMIZE</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetInitString</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">init</span><span class="p">)</span> <span class="c"># Set an initialization operator.</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetCrossoverProb</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>   <span class="c"># (Default is 85%)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetPopSize</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>          <span class="c"># 22 rather than 21</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetNumReplaceValue</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>  <span class="c"># Keep the best 22-21 = 1 string = elitist.</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>  <span class="c"># 300 generations, like the reference.</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetCrossover</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">tbx</span><span class="p">)</span>   <span class="c"># Set a cross-over operation.</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetMutation</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">swap</span><span class="p">)</span>   <span class="c"># Set a mutate operation. </span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">nswap</span> <span class="o">=</span> <span class="mi">3</span>               <span class="c"># Number of pairs to swap in mutation.</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                 <span class="c"># Internal allocations, etc.</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">tsm</span><span class="p">)</span>            <span class="c"># Set the objective and run.</span>
+    <span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+        <span class="n">best</span>        <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GetBestIndex</span><span class="p">(</span><span class="n">PGA</span><span class="o">.</span><span class="n">OLDPOP</span><span class="p">)</span>
+        <span class="n">besteval</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GetEvaluation</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">OLDPOP</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>              <span class="c"># Clean up PGAPack internals.</span>
+    
+<span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;  MEAN: &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">besteval</span><span class="p">)</span> <span class="c"># Print out the mean</span>
+    <span class="k">print</span> <span class="s">&quot; SIGMA: &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">besteval</span><span class="p">)</span>  <span class="c"># and standard deviation.</span>
+    <span class="k">print</span> <span class="s">&quot;   MIN: &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">besteval</span><span class="p">)</span>  <span class="c"># Print out the mean</span>
+    <span class="k">print</span> <span class="s">&quot;   MAX: &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">besteval</span><span class="p">)</span>  <span class="c"># Print out the mean</span>
+    <span class="n">t_end</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Elapsed time = &quot;</span><span class="p">,</span> <span class="n">t_end</span><span class="o">-</span><span class="n">t_start</span><span class="p">,</span> <span class="s">&quot; seconds.&quot;</span>
+    
+<span class="n">MPI</span><span class="o">.</span><span class="n">Finalize</span><span class="p">()</span> <span class="c"># Should be called automatically, but good practice.</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it using <tt class="docutils literal"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">1</span> <span class="pre">python</span> <span class="pre">example09.py</span></tt> yields
+the following output (last several lines):</p>
+<div class="highlight-python"><pre>300        Best       9.143837e+02
+The Best Evaluation: 9.143837e+02.
+The Best String:
+#    0: [       7], [      29], [       5], [       2], [      28], [      22]
+#    6: [       8], [      10], [      18], [      19], [       3], [      15]
+#   12: [      14], [      27], [      16], [       4], [      24], [      20]
+#   18: [      17], [      12], [      26], [      25], [       0], [       9]
+#   24: [       6], [      13], [      23], [      11], [      21], [       1]
+
+***Destroying PGA context***
+  MEAN:  844.962788368
+ SIGMA:  97.2494217692
+   MIN:  622.625633555
+   MAX:  997.810825333
+Elapsed time =  67.2148938179  seconds.
+</pre>
+</div>
+<p>Running it using <tt class="docutils literal"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">6</span> <span class="pre">python</span> <span class="pre">example09.py</span></tt> yields
+the following output (last several lines):</p>
+<div class="highlight-python"><pre>Iter #     Field      Value
+300        Best       8.004605e+02
+The Best Evaluation: 8.004605e+02.
+The Best String:
+#    0: [       7], [      18], [      17], [      14], [      25], [       5]
+#    6: [      19], [      24], [      16], [       2], [       3], [      22]
+#   12: [      21], [       1], [      23], [      26], [       8], [      28]
+#   18: [       9], [      12], [      11], [      15], [      20], [      10]
+#   24: [      27], [      29], [      13], [       0], [       4], [       6]
+
+***Destroying PGA context***
+  MEAN:  832.288188184
+ SIGMA:  79.9132513415
+   MIN:  597.338150861
+   MAX:  942.115139223
+Elapsed time =  45.1982860565  seconds.
+</pre>
+</div>
+<p>This was using a 6-core machine, but the speedup was barely
+25%&#8212;why?  Well, evaluating the distance of 30 cities is
+cheap compared to the sorting occuring on the master process
+for the cross-over operation.  As noted earlier, PGAPack&#8217;s
+parallelism is definitely meant for expensive evaluations
+relative to everything else.  Here, we see <em>some</em> speedup,
+just not very good.  Also compare the mean and standard
+deviation to the cited 829.00 and 72.69.  The parallel results
+are much closer, which may be a fluke, but it may be worth
+investigating.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#basic-examples">Basic Examples</a><ul>
+<li><a class="reference internal" href="#example-1-maxbit">Example 1: MAXBIT</a></li>
+<li><a class="reference internal" href="#example-2-maxint">Example 2: MAXINT</a></li>
+<li><a class="reference internal" href="#example-3-maxreal">Example 3: MAXREAL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#examples-of-user-defined-operators">Examples of User Defined Operators</a><ul>
+<li><a class="reference internal" href="#example-4-user-defined-string-initialization">Example 4: User-defined String Initialization</a></li>
+<li><a class="reference internal" href="#example-5-user-defined-crossover-operator">Example 5: User-defined Crossover Operator</a></li>
+<li><a class="reference internal" href="#example-6-user-defined-mutation-operator">Example 6: User-defined Mutation Operator</a></li>
+<li><a class="reference internal" href="#example-7-user-defined-end-of-generation-operator">Example 7: User-defined End of Generation Operator</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#parallel-examples">Parallel Examples</a><ul>
+<li><a class="reference internal" href="#example-8-parallel-maxbit">Example 8: Parallel MAXBIT</a></li>
+<li><a class="reference internal" href="#example-9-parallel-traveling-salesman">Example 9: Parallel Traveling Salesman</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="getting_started.html"
+                        title="previous chapter">Getting Started With pypgapack</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="methods.html"
+                        title="next chapter">Methods</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="methods.html" title="Methods"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="getting_started.html" title="Getting Started With pypgapack"
+             >previous</a> |</li>
+        <li><a href="index.html">pypgapack 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Jeremy Roberts.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
