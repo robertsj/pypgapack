@@ -27,13 +27,14 @@ SWIG=/home/robertsj/opt/swig/swig-2.0.4/bin/swig
 # PGAPack stuff.
 PGADIR=/home/robertsj/opt/pgapack/pgapack-1.1.1
 PGAINC=${PGADIR}/include/
-PGALIB=${PGADIR}/lib/serial/libpgas.so
+PGALIB=${PGADIR}/lib/parallel/libpgap.so
 
 # Parallel switch.
-#PARALLEL="-DPARALLEL"
+PARALLEL="-DPARALLEL"
 
 # Compiler.
-CXX=g++
+CXX=mpic++
+#CXX=g++
 
 # Build.
 ${SWIG} -c++ -python ${PARALLEL} pypgapack.i 

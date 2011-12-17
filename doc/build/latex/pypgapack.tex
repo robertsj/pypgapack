@@ -13,7 +13,7 @@
 
 
 \title{pypgapack Documentation}
-\date{December 04, 2011}
+\date{December 17, 2011}
 \release{0.1.0}
 \author{Jeremy Roberts}
 \newcommand{\sphinxlogo}{}
@@ -1266,6 +1266,476 @@ just not very good.  Also compare the mean and standard
 deviation to the cited 829.00 and 72.69.  The parallel results
 are much closer, which may be a fluke, but it may be worth
 investigating.
+
+
+\subsection{Example 10: Optimizing a Slab Reactor}
+\label{examples:example-10-optimizing-a-slab-reactor}
+In this problem, the goal is to optimize a ``slab reactor''.  While
+the physics is out of our scope, the essential idea is as
+follows.  We have 8 slabs, each 20 cm thick, and each of a
+different ``fuel''.  These slabs are situated together in some
+pattern.  The pattern is surrounded on either side by water,
+and beyond the right side water is vacuum while on the left
+side is an effective mirror, i.e. what goes in must return.
+This definition makes it so the sequence {[}0,1,...,7{]} is
+different from {[}7,...,1,0{]}.  What we want to do is to maximize
+the multiplication factor ``keff'' (which is related to how long
+the reactor could produce energy before needing more fuel)
+and make the power distribution as flat as possible (which
+in real reactors is related to several important safety
+margins).  The latter is quantified by the ``peaking factor'',
+defined as the maximum assembly power divided by the average
+power of all assemblies, and we seek to minimize this.  The
+objective function is a weighted sum of these objectives.
+
+The crossover used is the heuristic tie-breaking crossover
+(HTBX) described in Carter, \emph{Advances in Nuclear Science and
+Technology}., \textbf{25}, (1997).  The basic idea is similar
+to the TBX operator of the TSP examples but includes extra
+problem information, in this case the ``reactivity'' of the fuel
+as quantified by ``k-infinity''.  Basically, a more ``reactive''
+fuel produces more neutrons with time, or, in other words,
+contributes more to the energy production of the reactor.
+Because of the way the materials are ordered in this example,
+they are already sorted by reactivity.  Hence, TBX and HTBX
+are identical in implementation for this case.
+
+We run the problem over 100 generations and with a population
+of size 50.  We employ a rather elitist strategy, replacing
+40 strings each generation.  We also disallow identical strings.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{l+s+sd}{"""}
+\PYG{l+s+sd}{pypgapack/examples/example10.py  --  optimize a reflected 8 slab reactor}
+\PYG{l+s+sd}{"""}
+
+\PYG{k+kn}{from} \PYG{n+nn}{pypgapack} \PYG{k+kn}{import} \PYG{n}{PGA}
+\PYG{k+kn}{from} \PYG{n+nn}{mpi4py} \PYG{k+kn}{import} \PYG{n}{MPI}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pyplot} \PYG{k+kn}{as} \PYG{n+nn}{plt}
+\PYG{k+kn}{from} \PYG{n+nn}{scipy} \PYG{k+kn}{import} \PYG{n}{factorial}
+\PYG{k+kn}{from} \PYG{n+nn}{matplotlib} \PYG{k+kn}{import} \PYG{n}{rc}
+\PYG{n}{rc}\PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{text}\PYG{l+s}{'}\PYG{p}{,} \PYG{n}{usetex}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+\PYG{n}{rc}\PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{font}\PYG{l+s}{'}\PYG{p}{,} \PYG{n}{family}\PYG{o}{=}\PYG{l+s}{'}\PYG{l+s}{serif}\PYG{l+s}{'}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{MyPGA}\PYG{p}{(}\PYG{n}{PGA}\PYG{p}{)} \PYG{p}{:}
+    \PYG{l+s+sd}{"""  }
+\PYG{l+s+sd}{    Derive our own class from PGA.}
+\PYG{l+s+sd}{    """}
+    \PYG{k}{def} \PYG{n+nf}{f}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{p}\PYG{p}{,} \PYG{n}{pop}\PYG{p}{)} \PYG{p}{:}
+        \PYG{l+s+sd}{"""}
+\PYG{l+s+sd}{        Minimize peaking and maximize keff using weighted objective.}
+\PYG{l+s+sd}{        """}
+        \PYG{n}{pattern} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetIntegerChromosome}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{pop}\PYG{p}{)} 
+        \PYG{n}{keff}\PYG{p}{,} \PYG{n}{peak} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{flux}\PYG{p}{(}\PYG{n}{pattern}\PYG{p}{)}
+        \PYG{k}{del} \PYG{n}{pattern}
+        \PYG{n}{delta} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{k}{if} \PYG{n}{peak} \PYG{o}{\textgreater{}} \PYG{l+m+mf}{1.8} \PYG{p}{:}
+            \PYG{n}{delta} \PYG{o}{=} \PYG{n}{peak} \PYG{o}{-} \PYG{l+m+mf}{1.8}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{evals} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mi}{1}
+        \PYG{k}{return} \PYG{l+m+mf}{1.0}\PYG{o}{*}\PYG{n}{keff} \PYG{o}{-} \PYG{l+m+mf}{10.0}\PYG{o}{*}\PYG{n}{delta}
+    
+    \PYG{k}{def} \PYG{n+nf}{flux}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{pattern}\PYG{p}{,} \PYG{n}{plot}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{:}
+        \PYG{l+s+sd}{"""}
+\PYG{l+s+sd}{        Solve for the flux via simple mesh-centered finite differences.}
+\PYG{l+s+sd}{        }
+\PYG{l+s+sd}{        Returns keff and the maximum-to-average assembly-averaged }
+\PYG{l+s+sd}{        fission density ratio. }
+\PYG{l+s+sd}{        """}
+        \PYG{c}{\PYGZsh{} Coarse mesh boundaries.  (Specific to n=8!!)}
+        \PYG{n}{coarse} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,}\PYG{l+m+mf}{20.}\PYG{p}{,}\PYG{l+m+mf}{40.}\PYG{p}{,}\PYG{l+m+mf}{60.}\PYG{p}{,}\PYG{l+m+mf}{80.}\PYG{p}{,}\PYG{l+m+mf}{100.}\PYG{p}{,}\PYG{l+m+mf}{120.}\PYG{p}{,}\PYG{l+m+mf}{140.}\PYG{p}{,}\PYG{l+m+mf}{160.}\PYG{p}{,}\PYG{l+m+mf}{180.}\PYG{p}{,}\PYG{l+m+mf}{200.}\PYG{p}{]}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{} Fine meshes per coarse mesh.}
+        \PYG{n}{fine} \PYG{o}{=} \PYG{l+m+mi}{20}
+        \PYG{n}{dx} \PYG{o}{=} \PYG{l+m+mf}{20.0} \PYG{o}{/} \PYG{n}{fine}
+        \PYG{c}{\PYGZsh{} Material map (simplifies coefficients)}
+        \PYG{n}{mat} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{fine} \PYG{o}{*} \PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{coarse}\PYG{p}{)} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}
+        \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{:}\PYG{n}{fine}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{10} \PYG{c}{\PYGZsh{} reflector}
+        \PYG{n}{j} \PYG{o}{=} \PYG{n}{fine}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{number\PYGZus{}slabs}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{mat}\PYG{p}{[}\PYG{n}{j}\PYG{p}{:}\PYG{p}{(}\PYG{n}{j} \PYG{o}{+} \PYG{n}{fine}\PYG{p}{)}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pattern}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{c}{\PYGZsh{} one of the slabs}
+            \PYG{n}{j} \PYG{o}{+}\PYG{o}{=} \PYG{n}{fine} 
+        \PYG{n}{mat}\PYG{p}{[}\PYG{n}{j}\PYG{p}{:}\PYG{p}{(}\PYG{n}{j} \PYG{o}{+} \PYG{n}{fine}\PYG{p}{)}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{10} \PYG{c}{\PYGZsh{} reflector   }
+        \PYG{c}{\PYGZsh{} System size }
+        \PYG{n}{n} \PYG{o}{=} \PYG{n}{fine} \PYG{o}{*} \PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{coarse}\PYG{p}{)} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{} Materials}
+        \PYG{n}{D}\PYG{p}{,} \PYG{n}{R}\PYG{p}{,} \PYG{n}{F}\PYG{p}{,} \PYG{n}{S} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{materials}\PYG{p}{(}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{} Coefficient Matrix (just diagonals) and Vectors}
+        \PYG{n}{AD} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{)}
+        \PYG{n}{AL} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{)}
+        \PYG{n}{AU} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{)}
+        \PYG{n}{nufission} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{)}
+        \PYG{n}{scatter12} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{g} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{p}{:}
+            \PYG{c}{\PYGZsh{} reflective left boundary}
+            \PYG{n}{b} \PYG{o}{=} \PYG{l+m+mi}{1} 
+            \PYG{n}{AU}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mf}{2.0} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]} \PYG{o}{/} \PYGZbs{}
+                       \PYG{p}{(}\PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{dx} \PYG{o}{+} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{dx}\PYG{p}{)}
+            \PYG{n}{AD}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{o}{-}\PYG{n}{AU}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{+} \PYG{l+m+mf}{2.0} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{-} \PYG{n}{b}\PYG{p}{)} \PYG{o}{/} \PYGZbs{}
+                       \PYG{p}{(}\PYG{l+m+mf}{4.0} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{+} \PYG{n}{b}\PYG{p}{)} \PYG{o}{+} \PYG{n}{dx} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{-} \PYG{n}{b}\PYG{p}{)}\PYG{p}{)} \PYG{o}{+} \PYGZbs{}
+                       \PYG{n}{dx} \PYG{o}{*} \PYG{n}{R}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]} 
+            \PYG{n}{nufission}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{n}{dx} \PYG{o}{*} \PYG{n}{F}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]}
+            \PYG{n}{scatter12}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{dx} \PYG{o}{*} \PYG{n}{S}\PYG{p}{[}\PYG{n}{mat}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]}
+            \PYG{c}{\PYGZsh{} vacuum right boundary}
+            \PYG{n}{b} \PYG{o}{=} \PYG{l+m+mi}{0} 
+            \PYG{n}{AL}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mf}{2.0} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{]} \PYG{o}{/} \PYGZbs{}
+                           \PYG{p}{(}\PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{dx} \PYG{o}{+} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{dx}\PYG{p}{)}
+            \PYG{n}{AD}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{o}{-}\PYG{n}{AL}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{+} \PYGZbs{}
+                        \PYG{l+m+mf}{2.0} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{-} \PYG{n}{b}\PYG{p}{)} \PYG{o}{/} \PYGZbs{}
+                       \PYG{p}{(}\PYG{l+m+mf}{4.0} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{+} \PYG{n}{b}\PYG{p}{)} \PYG{o}{+} \PYGZbs{}
+                       \PYG{n}{dx} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{-} \PYG{n}{b}\PYG{p}{)}\PYG{p}{)} \PYG{o}{+} \PYGZbs{}
+                       \PYG{n}{dx} \PYG{o}{*} \PYG{n}{R}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]}
+            \PYG{n}{nufission}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{n}{dx} \PYG{o}{*} \PYG{n}{F}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]}
+            \PYG{n}{scatter12}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{dx} \PYG{o}{*} \PYG{n}{S}\PYG{p}{[}\PYG{n}{mat}\PYG{p}{[}\PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]}
+            \PYG{c}{\PYGZsh{} internal cells                                              }
+            \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{:}
+                \PYG{n}{AL}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mf}{2.0} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{l+m+mi}{1} \PYG{p}{]}\PYG{p}{]} \PYG{o}{/} \PYGZbs{}
+                               \PYG{p}{(}\PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{dx} \PYG{o}{+} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{dx}\PYG{p}{)}
+                \PYG{n}{AU}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mf}{2.0} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{p}{]}\PYG{p}{]} \PYG{o}{/} \PYGZbs{}
+                           \PYG{p}{(}\PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{dx} \PYG{o}{+} \PYG{n}{D}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{]} \PYG{o}{*} \PYG{n}{dx}\PYG{p}{)}   
+                
+                \PYG{n}{AD}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{o}{-}\PYG{p}{(}\PYG{n}{AL}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{+} \PYG{n}{AU}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]}\PYG{p}{)} \PYG{o}{+} \PYG{n}{dx} \PYG{o}{*} \PYG{n}{R}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]}
+                \PYG{n}{nufission}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{g}\PYG{p}{]} \PYG{o}{=} \PYG{n}{dx} \PYG{o}{*} \PYG{n}{F}\PYG{p}{[}\PYG{n}{g}\PYG{p}{,} \PYG{n}{mat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]}
+                \PYG{n}{scatter12}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{dx} \PYG{o}{*} \PYG{n}{S}\PYG{p}{[}\PYG{n}{mat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]}
+        \PYG{c}{\PYGZsh{} Initiate the fluxes.}
+        \PYG{n}{phi1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{n}{phi2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{} Use a guess for fission density based on fission cross section.}
+        \PYG{n}{fission\PYGZus{}density} \PYG{o}{=} \PYG{n}{nufission}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}
+        \PYG{c}{\PYGZsh{} and normalize it.}
+        \PYG{n}{fission\PYGZus{}density} \PYG{o}{=} \PYG{n}{fission\PYGZus{}density} \PYG{o}{/} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{fission\PYGZus{}density}\PYG{o}{*}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{)}                          
+        \PYG{n}{fission\PYGZus{}density0} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{} Initialize the downscatter source.}
+        \PYG{n}{scatter\PYGZus{}source} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{} Initial eigenvalue guess.}
+        \PYG{n}{keff} \PYG{o}{=} \PYG{l+m+mi}{1}
+        \PYG{n}{keff0} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{c}{\PYGZsh{} Set errors.}
+        \PYG{n}{errorfd} \PYG{o}{=} \PYG{l+m+mf}{1.0}
+        \PYG{n}{errork} \PYG{o}{=} \PYG{l+m+mf}{1.0}
+        \PYG{n}{it} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{k}{while} \PYG{p}{(}\PYG{n}{errorfd} \PYG{o}{\textgreater{}} \PYG{l+m+mf}{1e-5} \PYG{o+ow}{and} \PYG{n}{errork} \PYG{o}{\textgreater{}} \PYG{l+m+mf}{1e-5} \PYG{o+ow}{and} \PYG{n}{it} \PYG{o}{\textless{}} \PYG{l+m+mi}{200}\PYG{p}{)} \PYG{p}{:}
+            \PYG{c}{\PYGZsh{} Solve fast group.}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{tridiag}\PYG{p}{(}\PYG{n}{AU}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{AL}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{AD}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYGZbs{}
+                         \PYG{n}{fission\PYGZus{}density} \PYG{o}{/} \PYG{n}{keff}\PYG{p}{,} \PYG{n}{phi1}\PYG{p}{)}
+            \PYG{c}{\PYGZsh{} Compute down scatter source.}
+            \PYG{n}{scatter\PYGZus{}source} \PYG{o}{=} \PYG{n}{phi1} \PYG{o}{*} \PYG{n}{scatter12}
+            \PYG{c}{\PYGZsh{} Solve thermal group.}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{tridiag}\PYG{p}{(}\PYG{n}{AU}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{n}{AL}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{n}{AD}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{n}{scatter\PYGZus{}source}\PYG{p}{,} \PYG{n}{phi2}\PYG{p}{)}
+            \PYG{c}{\PYGZsh{} Keep old values.}
+            \PYG{n}{fission\PYGZus{}density0}\PYG{p}{[}\PYG{p}{:}\PYG{p}{]} \PYG{o}{=} \PYG{n}{fission\PYGZus{}density}
+            \PYG{n}{keff0} \PYG{o}{=} \PYG{n}{keff}
+            \PYG{c}{\PYGZsh{} Update density and eigenvalue}
+            \PYG{n}{fission\PYGZus{}density}\PYG{p}{[}\PYG{p}{:}\PYG{p}{]} \PYG{o}{=} \PYG{n}{phi1} \PYG{o}{*} \PYG{n}{nufission}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYGZbs{}
+                                 \PYG{n}{phi2} \PYG{o}{*} \PYG{n}{nufission}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]} 
+            \PYG{n}{keff} \PYG{o}{=} \PYG{n}{keff0} \PYG{o}{*} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{fission\PYGZus{}density}\PYG{p}{)} \PYG{o}{/} \PYGZbs{}
+                             \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{fission\PYGZus{}density0}\PYG{p}{)}
+            \PYG{c}{\PYGZsh{} Update errors.  Use Linf norm on density.}
+            \PYG{n}{errorfd} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{abs}\PYG{p}{(}\PYG{n}{fission\PYGZus{}density} \PYG{o}{-} \PYG{n}{fission\PYGZus{}density0}\PYG{p}{)}\PYG{p}{)}
+            \PYG{n}{errork} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{abs}\PYG{p}{(}\PYG{n}{keff} \PYG{o}{-} \PYG{n}{keff0}\PYG{p}{)}
+            \PYG{n}{it} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mi}{1}
+        \PYG{c}{\PYGZsh{} Now we average the fission density over each fueled coarse mesh.}
+        \PYG{n}{slab\PYGZus{}fission\PYGZus{}density} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{number\PYGZus{}slabs}\PYG{p}{)}
+        \PYG{n}{j} \PYG{o}{=} \PYG{n}{fine}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{number\PYGZus{}slabs}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{slab\PYGZus{}fission\PYGZus{}density}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYGZbs{}
+                \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{fission\PYGZus{}density}\PYG{p}{[}\PYG{n}{j}\PYG{p}{:}\PYG{p}{(}\PYG{n}{j} \PYG{o}{+} \PYG{n}{fine}\PYG{p}{)} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}
+            \PYG{n}{j} \PYG{o}{+}\PYG{o}{=} \PYG{n}{fine} 
+        \PYG{n}{mean\PYGZus{}fission\PYGZus{}density} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{fission\PYGZus{}density}\PYG{p}{)}  
+        \PYG{n}{peaking} \PYG{o}{=} \PYG{n}{slab\PYGZus{}fission\PYGZus{}density} \PYG{o}{/} \PYG{n}{mean\PYGZus{}fission\PYGZus{}density}  
+        \PYG{n}{max\PYGZus{}peaking} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{peaking}\PYG{p}{)}   
+        \PYG{k}{return} \PYG{n}{keff}\PYG{p}{,} \PYG{n}{max\PYGZus{}peaking}
+        
+    \PYG{k}{def} \PYG{n+nf}{tridiag}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{U}\PYG{p}{,} \PYG{n}{L}\PYG{p}{,} \PYG{n}{D}\PYG{p}{,} \PYG{n}{f}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{""" }
+\PYG{l+s+sd}{        Tridiagonal solver.  }
+\PYG{l+s+sd}{        }
+\PYG{l+s+sd}{        This assumes vectors U, L, and D are of the same length.  The right}
+\PYG{l+s+sd}{        hand side is f and the solved unknowns are returned in y.}
+\PYG{l+s+sd}{        """}
+        \PYG{n}{N} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{D}\PYG{p}{)}
+        \PYG{n}{w} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{N}\PYG{p}{)}
+        \PYG{n}{v} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{N}\PYG{p}{)}
+        \PYG{n}{z} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{N}\PYG{p}{)}
+        \PYG{n}{w}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{D}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{n}{v}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{U}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{/} \PYG{n}{w}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{f}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{/} \PYG{n}{w}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}   
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{N}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{w}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{D}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{-} \PYG{n}{L}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{*} \PYG{n}{v}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}
+            \PYG{n}{v}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{U}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{/} \PYG{n}{w}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{-} \PYG{n}{L}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{*} \PYG{n}{z}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{o}{/} \PYG{n}{w}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+        \PYG{n}{y}\PYG{p}{[}\PYG{n}{N} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{z}\PYG{p}{[}\PYG{n}{N} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{]}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{N} \PYG{o}{-} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{-} \PYG{n}{v}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{*} \PYG{n}{y}\PYG{p}{[}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{]}
+    
+    \PYG{k}{def} \PYG{n+nf}{materials}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{"""}
+\PYG{l+s+sd}{        10 fuels with one 1 reflector by row.  Represents burnup of 0, 5, }
+\PYG{l+s+sd}{        10, 15, 20, 25, 30, 35, 40, and 45 MWd/kg for one assembly type.}
+\PYG{l+s+sd}{        """}
+        \PYG{n}{D} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}                                                  \PYGZbs{}
+            \PYG{p}{[}\PYG{l+m+mf}{1.4402e+00}\PYG{p}{,} \PYG{l+m+mf}{1.4429e+00}\PYG{p}{,} \PYG{l+m+mf}{1.4453e+00}\PYG{p}{,} \PYG{l+m+mf}{1.4467e+00}\PYG{p}{,} \PYG{l+m+mf}{1.4476e+00}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{1.4483e+00}\PYG{p}{,} \PYG{l+m+mf}{1.4489e+00}\PYG{p}{,} \PYG{l+m+mf}{1.4496e+00}\PYG{p}{,} \PYG{l+m+mf}{1.4507e+00}\PYG{p}{,} \PYG{l+m+mf}{1.4525e+00}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{1.3200e+00}\PYG{p}{]}\PYG{p}{,}                                               \PYGZbs{}
+            \PYG{p}{[}\PYG{l+m+mf}{3.7939e-01}\PYG{p}{,} \PYG{l+m+mf}{3.7516e-01}\PYG{p}{,} \PYG{l+m+mf}{3.7233e-01}\PYG{p}{,} \PYG{l+m+mf}{3.7045e-01}\PYG{p}{,} \PYG{l+m+mf}{3.6913e-01}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{3.6818e-01}\PYG{p}{,} \PYG{l+m+mf}{3.6749e-01}\PYG{p}{,} \PYG{l+m+mf}{3.6699e-01}\PYG{p}{,} \PYG{l+m+mf}{3.6649e-01}\PYG{p}{,} \PYG{l+m+mf}{3.6615e-01}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{2.6720e-01}\PYG{p}{]}\PYG{p}{]}\PYG{p}{)}
+        \PYG{n}{R} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}                                                  \PYGZbs{}
+            \PYG{p}{[}\PYG{l+m+mf}{2.5800e-02}\PYG{p}{,} \PYG{l+m+mf}{2.5751e-02}\PYG{p}{,} \PYG{l+m+mf}{2.5755e-02}\PYG{p}{,} \PYG{l+m+mf}{2.5840e-02}\PYG{p}{,} \PYG{l+m+mf}{2.5958e-02}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{2.6090e-02}\PYG{p}{,} \PYG{l+m+mf}{2.6226e-02}\PYG{p}{,} \PYG{l+m+mf}{2.6362e-02}\PYG{p}{,} \PYG{l+m+mf}{2.6559e-02}\PYG{p}{,} \PYG{l+m+mf}{2.6802e-02}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{2.5700e-02}\PYG{p}{]}\PYG{p}{,}                                               \PYGZbs{}
+            \PYG{p}{[}\PYG{l+m+mf}{1.1817e-01}\PYG{p}{,} \PYG{l+m+mf}{1.2301e-01}\PYG{p}{,} \PYG{l+m+mf}{1.2306e-01}\PYG{p}{,} \PYG{l+m+mf}{1.2277e-01}\PYG{p}{,} \PYG{l+m+mf}{1.2223e-01}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{1.2136e-01}\PYG{p}{,} \PYG{l+m+mf}{1.2017e-01}\PYG{p}{,} \PYG{l+m+mf}{1.1871e-01}\PYG{p}{,} \PYG{l+m+mf}{1.1622e-01}\PYG{p}{,} \PYG{l+m+mf}{1.1275e-01}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{5.1500e-02}\PYG{p}{]}\PYG{p}{]}\PYG{p}{)}
+        \PYG{n}{F} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}                                                  \PYGZbs{}
+            \PYG{p}{[}\PYG{l+m+mf}{7.9653e-03}\PYG{p}{,} \PYG{l+m+mf}{7.6255e-03}\PYG{p}{,} \PYG{l+m+mf}{7.2724e-03}\PYG{p}{,} \PYG{l+m+mf}{6.9344e-03}\PYG{p}{,} \PYG{l+m+mf}{6.6169e-03}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{6.3189e-03}\PYG{p}{,} \PYG{l+m+mf}{6.0453e-03}\PYG{p}{,} \PYG{l+m+mf}{5.7908e-03}\PYG{p}{,} \PYG{l+m+mf}{5.4413e-03}\PYG{p}{,} \PYG{l+m+mf}{5.0379e-03}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{0.00000000}\PYG{p}{]}\PYG{p}{,}                                               \PYGZbs{}
+            \PYG{p}{[}\PYG{l+m+mf}{1.6359e-01}\PYG{p}{,} \PYG{l+m+mf}{1.7301e-01}\PYG{p}{,} \PYG{l+m+mf}{1.7681e-01}\PYG{p}{,} \PYG{l+m+mf}{1.7634e-01}\PYG{p}{,} \PYG{l+m+mf}{1.7355e-01}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{1.6931e-01}\PYG{p}{,} \PYG{l+m+mf}{1.6424e-01}\PYG{p}{,} \PYG{l+m+mf}{1.5869e-01}\PYG{p}{,} \PYG{l+m+mf}{1.5005e-01}\PYG{p}{,} \PYG{l+m+mf}{1.3894e-01}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{0.00000000}\PYG{p}{]}\PYG{p}{]}\PYG{p}{)}
+        \PYG{n}{S} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}                                                   \PYGZbs{}
+            \PYG{p}{[}\PYG{l+m+mf}{1.5204e-02}\PYG{p}{,} \PYG{l+m+mf}{1.5152e-02}\PYG{p}{,} \PYG{l+m+mf}{1.4958e-02}\PYG{p}{,} \PYG{l+m+mf}{1.4828e-02}\PYG{p}{,} \PYG{l+m+mf}{1.4744e-02}\PYG{p}{,}\PYGZbs{}
+             \PYG{l+m+mf}{1.4691e-02}\PYG{p}{,} \PYG{l+m+mf}{1.4652e-02}\PYG{p}{,} \PYG{l+m+mf}{1.4626e-02}\PYG{p}{,} \PYG{l+m+mf}{1.4601e-02}\PYG{p}{,} \PYG{l+m+mf}{1.4587e-02}\PYG{p}{,}\PYGZbs{}
+              \PYG{l+m+mf}{2.3100e-02}\PYG{p}{]}\PYG{p}{)}                   
+        \PYG{k}{return} \PYG{n}{D}\PYG{p}{,} \PYG{n}{R}\PYG{p}{,} \PYG{n}{F}\PYG{p}{,} \PYG{n}{S}
+    
+    \PYG{k}{def} \PYG{n+nf}{kinf}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{pattern}\PYG{p}{)} \PYG{p}{:}
+        \PYG{l+s+sd}{"""}
+\PYG{l+s+sd}{        Compute kinf for each slab.}
+\PYG{l+s+sd}{        """}
+        \PYG{n}{D}\PYG{p}{,} \PYG{n}{R}\PYG{p}{,} \PYG{n}{F}\PYG{p}{,} \PYG{n}{S} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{materials}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n}{k} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{pattern}\PYG{p}{)}\PYG{p}{)}   
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{pattern}\PYG{p}{)}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{k}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{F}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{F}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{*} \PYG{n}{S}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{/} \PYG{n}{R}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]}\PYG{p}{)} \PYG{o}{/} \PYG{n}{R}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} 
+        \PYG{k}{return} \PYG{n}{k}
+            
+    \PYG{k}{def} \PYG{n+nf}{htbx}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{p1}\PYG{p}{,} \PYG{n}{p2}\PYG{p}{,} \PYG{n}{pop1}\PYG{p}{,} \PYG{n}{c1}\PYG{p}{,} \PYG{n}{c2}\PYG{p}{,} \PYG{n}{pop2}\PYG{p}{)} \PYG{p}{:}
+        \PYG{l+s+sd}{"""}
+\PYG{l+s+sd}{        Heuristic tie-breaking cross-over.  See Carter for details. Actually, }
+\PYG{l+s+sd}{        for this problem, HTBX is equivalent to TBX, since the materials are }
+\PYG{l+s+sd}{        already ordered by reactivity.}
+\PYG{l+s+sd}{        """}
+        \PYG{c}{\PYGZsh{} Grab the city id's.}
+        \PYG{n}{paren1} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetIntegerChromosome}\PYG{p}{(}\PYG{n}{p1}\PYG{p}{,} \PYG{n}{pop1}\PYG{p}{)}
+        \PYG{n}{paren2} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetIntegerChromosome}\PYG{p}{(}\PYG{n}{p2}\PYG{p}{,} \PYG{n}{pop1}\PYG{p}{)}
+        \PYG{n}{child1} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetIntegerChromosome}\PYG{p}{(}\PYG{n}{c1}\PYG{p}{,} \PYG{n}{pop2}\PYG{p}{)}
+        \PYG{n}{child2} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetIntegerChromosome}\PYG{p}{(}\PYG{n}{c2}\PYG{p}{,} \PYG{n}{pop2}\PYG{p}{)}       
+        \PYG{c}{\PYGZsh{} Copy the parents to temporary vector for manipulation.}
+        \PYG{n}{n} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetStringLength}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n}{parent1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{n}{parent2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{parent1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{paren1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{n}{parent2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{paren2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}               
+        \PYG{c}{\PYGZsh{} Code the parents using "position listing".}
+        \PYG{n}{code1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{n}{code2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{code1}\PYG{p}{[}\PYG{n}{parent1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}
+            \PYG{n}{code2}\PYG{p}{[}\PYG{n}{parent2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}
+        \PYG{c}{\PYGZsh{} Randomly choose two cross-over points. }
+        \PYG{n}{perm} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{permutation}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{n}{point1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{min}\PYG{p}{(}\PYG{n}{perm}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{:}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}
+        \PYG{n}{point2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{perm}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{:}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{1} 
+        \PYG{c}{\PYGZsh{} Exchange all alleles between the two points.}
+        \PYG{n}{temp} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{point2} \PYG{o}{-} \PYG{n}{point1}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{point1}\PYG{p}{,} \PYG{n}{point2}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{temp}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{n}{point1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{parent1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{n}{parent1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{parent2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{n}{parent2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{temp}\PYG{p}{[}\PYG{n}{i} \PYG{o}{-} \PYG{n}{point1}\PYG{p}{]} 
+        \PYG{c}{\PYGZsh{} Generate a cross-over map, a random ordering of the 0,1,...,n-1}
+        \PYG{n}{crossovermap} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{permutation}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)} 
+        \PYG{c}{\PYGZsh{} Multiply each allele of the strung by n and add the map.}
+        \PYG{n}{parent1} \PYG{o}{=} \PYG{n}{parent1} \PYG{o}{*} \PYG{n}{n} \PYG{o}{+} \PYG{n}{crossovermap}
+        \PYG{n}{parent2} \PYG{o}{=} \PYG{n}{parent2} \PYG{o}{*} \PYG{n}{n} \PYG{o}{+} \PYG{n}{crossovermap}
+        \PYG{c}{\PYGZsh{} Replace the lowest allele by 0, the next by 1, up to n-1.  Here,}
+        \PYG{c}{\PYGZsh{}   we sort the parents first, and then for each element, find}
+        \PYG{c}{\PYGZsh{}   where the increasing values are found in the original.  There}
+        \PYG{c}{\PYGZsh{}   is probably a simpler set of functions built in somewhere.}
+        \PYG{n}{sort1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sort}\PYG{p}{(}\PYG{n}{parent1}\PYG{p}{)}
+        \PYG{n}{sort2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sort}\PYG{p}{(}\PYG{n}{parent2}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{index} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{where}\PYG{p}{(}\PYG{n}{parent1} \PYG{o}{==} \PYG{n}{sort1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{)}
+            \PYG{n}{parent1}\PYG{p}{[}\PYG{n}{index}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}
+            \PYG{n}{index} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{where}\PYG{p}{(}\PYG{n}{parent2} \PYG{o}{==} \PYG{n}{sort2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{)}
+            \PYG{n}{parent2}\PYG{p}{[}\PYG{n}{index}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}   
+        \PYG{c}{\PYGZsh{} Map the string back to elements.  These are the offspring.}
+        \PYG{n}{tempchild1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{n}{tempchild2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{tempchild1}\PYG{p}{[}\PYG{n}{parent1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}
+            \PYG{n}{tempchild2}\PYG{p}{[}\PYG{n}{parent2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}            
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)} \PYG{p}{:}
+            \PYG{n}{child1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tempchild1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{n}{child2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tempchild2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}    
+                
+    \PYG{k}{def} \PYG{n+nf}{eog}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{"""}
+\PYG{l+s+sd}{        Log some data for each generation. }
+\PYG{l+s+sd}{        """}
+        \PYG{n}{best}                \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetBestIndex}\PYG{p}{(}\PYG{n}{PGA}\PYG{o}{.}\PYG{n}{OLDPOP}\PYG{p}{)}
+        \PYG{n}{bestpattern}         \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetIntegerChromosome}\PYG{p}{(}\PYG{n}{best}\PYG{p}{,} \PYG{n}{PGA}\PYG{o}{.}\PYG{n}{OLDPOP}\PYG{p}{)}
+        \PYG{n+nb}{iter}                \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetGAIterValue}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n}{keff}\PYG{p}{,} \PYG{n}{peak}          \PYG{o}{=} \PYG{n}{opt}\PYG{o}{.}\PYG{n}{flux}\PYG{p}{(}\PYG{n}{bestpattern}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{besteval}\PYG{p}{[}\PYG{n+nb}{iter}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{GetEvaluation}\PYG{p}{(}\PYG{n}{best}\PYG{p}{,} \PYG{n}{PGA}\PYG{o}{.}\PYG{n}{OLDPOP}\PYG{p}{)}                                                
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bestkeff}\PYG{p}{[}\PYG{n+nb}{iter}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{keff}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bestpeak}\PYG{p}{[}\PYG{n+nb}{iter}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{peak}        
+                                   
+\PYG{n}{comm} \PYG{o}{=} \PYG{n}{MPI}\PYG{o}{.}\PYG{n}{COMM\PYGZus{}WORLD}           \PYG{c}{\PYGZsh{} Get the communicator.}
+\PYG{n}{rank} \PYG{o}{=} \PYG{n}{comm}\PYG{o}{.}\PYG{n}{Get\PYGZus{}rank}\PYG{p}{(}\PYG{p}{)}          \PYG{c}{\PYGZsh{} Get my rank.  }
+\PYG{n}{size} \PYG{o}{=} \PYG{n}{comm}\PYG{o}{.}\PYG{n}{Get\PYGZus{}size}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{t\PYGZus{}start} \PYG{o}{=} \PYG{n}{MPI}\PYG{o}{.}\PYG{n}{Wtime}\PYG{p}{(}\PYG{p}{)}           \PYG{c}{\PYGZsh{} Start the clock.                                             }
+\PYG{n}{n} \PYG{o}{=} \PYG{l+m+mi}{8}                           \PYG{c}{\PYGZsh{} Number of fueled slabs (1-10)}
+\PYG{n}{opt} \PYG{o}{=} \PYG{n}{MyPGA}\PYG{p}{(}\PYG{n}{sys}\PYG{o}{.}\PYG{n}{argv}\PYG{p}{,} \PYG{n}{PGA}\PYG{o}{.}\PYG{n}{DATATYPE\PYGZus{}INTEGER}\PYG{p}{,} \PYG{n}{n}\PYG{p}{,} \PYG{n}{PGA}\PYG{o}{.}\PYG{n}{MAXIMIZE}\PYG{p}{)}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetRandomSeed}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}                    \PYG{c}{\PYGZsh{} Set seed for verification.}
+\PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{seed}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}                       \PYG{c}{\PYGZsh{} Do the same with Numpy.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetIntegerInitPermute}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{n} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{)}     \PYG{c}{\PYGZsh{} Start with random permutations. }
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetPopSize}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)}                      \PYG{c}{\PYGZsh{} Large enough to see some success.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetNumReplaceValue}\PYG{p}{(}\PYG{l+m+mi}{40}\PYG{p}{)}              \PYG{c}{\PYGZsh{} Keep the best half.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetMaxGAIterValue}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)}               \PYG{c}{\PYGZsh{} Small number for output.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetCrossover}\PYG{p}{(}\PYG{n}{opt}\PYG{o}{.}\PYG{n}{htbx}\PYG{p}{)}              \PYG{c}{\PYGZsh{} Set a cross-over operation.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetEndOfGen}\PYG{p}{(}\PYG{n}{opt}\PYG{o}{.}\PYG{n}{eog}\PYG{p}{)}                \PYG{c}{\PYGZsh{} End of generation info}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetMutation}\PYG{p}{(}\PYG{n}{PGA}\PYG{o}{.}\PYG{n}{MUTATION\PYGZus{}PERMUTE}\PYG{p}{)}   \PYG{c}{\PYGZsh{} Mutate by permutation.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetNoDuplicatesFlag}\PYG{p}{(}\PYG{n}{PGA}\PYG{o}{.}\PYG{n}{TRUE}\PYG{p}{)}       \PYG{c}{\PYGZsh{} Keep no duplicate patterns.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{SetUp}\PYG{p}{(}\PYG{p}{)}                             \PYG{c}{\PYGZsh{} Internal allocations, etc.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{number\PYGZus{}slabs} \PYG{o}{=} \PYG{n}{n}                    \PYG{c}{\PYGZsh{} Must be set to string size.}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{evals} \PYG{o}{=} \PYG{l+m+mi}{0}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{besteval} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{l+m+mi}{51}\PYG{p}{)}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{bestkeff} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{l+m+mi}{51}\PYG{p}{)}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{bestpeak} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{l+m+mi}{51}\PYG{p}{)}
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{Run}\PYG{p}{(}\PYG{n}{opt}\PYG{o}{.}\PYG{n}{f}\PYG{p}{)}
+
+\PYG{k}{if} \PYG{n}{rank} \PYG{o}{\textgreater{}} \PYG{l+m+mi}{0}\PYG{p}{:}
+    \PYG{n}{evals} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{n}{opt}\PYG{o}{.}\PYG{n}{evals}\PYG{p}{]}\PYG{p}{,}\PYG{n}{dtype}\PYG{o}{=}\PYG{l+s}{'}\PYG{l+s}{i}\PYG{l+s}{'}\PYG{p}{)}
+    \PYG{n}{comm}\PYG{o}{.}\PYG{n}{Send}\PYG{p}{(}\PYG{p}{[}\PYG{n}{evals}\PYG{p}{,}\PYG{n}{MPI}\PYG{o}{.}\PYG{n}{INT}\PYG{p}{]}\PYG{p}{,} \PYG{n}{dest}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{tag}\PYG{o}{=}\PYG{l+m+mi}{13}\PYG{p}{)}
+\PYG{k}{else} \PYG{p}{:}
+    \PYG{n}{evals} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,}\PYG{n}{dtype}\PYG{o}{=}\PYG{l+s}{'}\PYG{l+s}{i}\PYG{l+s}{'}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{:}
+        \PYG{n}{comm}\PYG{o}{.}\PYG{n}{Recv}\PYG{p}{(}\PYG{p}{[}\PYG{n}{evals}\PYG{p}{,}\PYG{n}{MPI}\PYG{o}{.}\PYG{n}{INT}\PYG{p}{]}\PYG{p}{,} \PYG{n}{source}\PYG{o}{=}\PYG{n}{i}\PYG{p}{,} \PYG{n}{tag}\PYG{o}{=}\PYG{l+m+mi}{13}\PYG{p}{)}
+        \PYG{n}{opt}\PYG{o}{.}\PYG{n}{evals} \PYG{o}{+}\PYG{o}{=} \PYG{n}{evals}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+    
+\PYG{k}{if} \PYG{n}{rank} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{p}{:}
+    \PYG{n}{best} \PYG{o}{=} \PYG{n}{opt}\PYG{o}{.}\PYG{n}{GetBestIndex}\PYG{p}{(}\PYG{n}{PGA}\PYG{o}{.}\PYG{n}{OLDPOP}\PYG{p}{)} \PYG{c}{\PYGZsh{} Get the best string}
+    \PYG{n}{bestpattern} \PYG{o}{=} \PYG{n}{opt}\PYG{o}{.}\PYG{n}{GetIntegerChromosome}\PYG{p}{(}\PYG{n}{best}\PYG{p}{,} \PYG{n}{PGA}\PYG{o}{.}\PYG{n}{OLDPOP}\PYG{p}{)}
+    \PYG{n}{keff}\PYG{p}{,} \PYG{n}{peak} \PYG{o}{=} \PYG{n}{opt}\PYG{o}{.}\PYG{n}{flux}\PYG{p}{(}\PYG{n}{bestpattern}\PYG{p}{)}  \PYG{c}{\PYGZsh{}   and its keff and peak}
+    \PYG{k}{print} \PYG{l+s}{"}\PYG{l+s}{ best keff = }\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{keff}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{ and peak = }\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{peak}
+    \PYG{n}{t\PYGZus{}end} \PYG{o}{=} \PYG{n}{MPI}\PYG{o}{.}\PYG{n}{Wtime}\PYG{p}{(}\PYG{p}{)}
+    \PYG{k}{print} \PYG{l+s}{"}\PYG{l+s}{Elapsed time = }\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{t\PYGZus{}end}\PYG{o}{-}\PYG{n}{t\PYGZus{}start}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{ seconds.}\PYG{l+s}{"}
+    \PYG{k}{print} \PYG{l+s}{"}\PYG{l+s}{\PYGZsh{} Evaluations = }\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{opt}\PYG{o}{.}\PYG{n}{evals}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(} \PYG{n}{np}\PYG{o}{.}\PYG{n}{arange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{51}\PYG{p}{)}\PYG{p}{,} \PYG{n}{opt}\PYG{o}{.}\PYG{n}{besteval}\PYG{p}{,} \PYG{l+s}{'}\PYG{l+s}{b}\PYG{l+s}{'}\PYG{p}{,}                          \PYGZbs{}
+              \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{51}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{1.06611227} \PYG{p}{,} \PYG{l+m+mf}{1.06611227}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,} \PYG{l+s}{'}\PYG{l+s}{g--}\PYG{l+s}{'}\PYG{p}{,}\PYGZbs{}
+              \PYG{n}{lw}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{)} \PYG{c}{\PYGZsh{} Plot the objective as a function of generations}
+                    \PYG{c}{\PYGZsh{}   against the reference solution.}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{Convergence of Objective}\PYG{l+s}{'}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{ generation}\PYG{l+s}{'}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{ objective }\PYG{l+s}{'}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{(}\PYG{p}{(}\PYG{l+s}{'}\PYG{l+s}{HTBX}\PYG{l+s}{'}\PYG{p}{,} \PYG{l+s}{'}\PYG{l+s}{solution}\PYG{l+s}{'}\PYG{p}{)}\PYG{p}{,}\PYG{n}{loc}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{,} \PYG{n}{shadow}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{grid}\PYG{p}{(}\PYG{n+nb+bp}{True}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{(}\PYG{p}{)}
+    
+\PYG{n}{MPI}\PYG{o}{.}\PYG{n}{Finalize}\PYG{p}{(}\PYG{p}{)}  
+\PYG{n}{opt}\PYG{o}{.}\PYG{n}{Destroy}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}
+
+Running it using \code{mpirun -np 1 python example10.py} yields
+the following output:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+***Constructing PGA***
+Iter \#     Field      Value
+10         Best       1.060239e+00
+Iter \#     Field      Value
+20         Best       1.065283e+00
+Iter \#     Field      Value
+30         Best       1.065808e+00
+Iter \#     Field      Value
+40         Best       1.065808e+00
+Iter \#     Field      Value
+50         Best       1.065808e+00
+The Best Evaluation: 1.065808e+00.
+The Best String:
+\#    0: [       4], [       2], [       1], [       5], [       3], [       0]
+\#    6: [       7], [       6]
+
+ best keff =  1.06416554234  and peak =  2.00346511469
+Elapsed time =  179.573677063  seconds.
+\# Evaluations =  1990
+***Destroying PGA context***
+\end{Verbatim}
+
+Running it using \code{mpirun -np 2 python example10.py} yields
+the following output:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+***Constructing PGA***
+***Constructing PGA***
+Iter \#     Field      Value
+10         Best       1.060239e+00
+Iter \#     Field      Value
+20         Best       1.065283e+00
+Iter \#     Field      Value
+30         Best       1.065808e+00
+Iter \#     Field      Value
+40         Best       1.065808e+00
+Iter \#     Field      Value
+50         Best       1.065808e+00
+The Best Evaluation: 1.065808e+00.
+The Best String:
+\#    0: [       4], [       2], [       1], [       5], [       3], [       0]
+\#    6: [       7], [       6]
+
+ best keff =  1.06416554234  and peak =  2.00346511469
+Elapsed time =  108.014204025  seconds.
+\# Evaluations =  1990
+***Destroying PGA context***
+***Destroying PGA context***
+\end{Verbatim}
+
+Running it using \code{mpirun -np 5 python example10.py} yields
+the following output:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+***Constructing PGA***
+***Constructing PGA***
+***Constructing PGA***
+***Constructing PGA***
+***Constructing PGA***
+Iter \#     Field      Value
+10         Best       1.060239e+00
+Iter \#     Field      Value
+20         Best       1.065283e+00
+Iter \#     Field      Value
+30         Best       1.065808e+00
+Iter \#     Field      Value
+40         Best       1.065808e+00
+Iter \#     Field      Value
+50         Best       1.065808e+00
+The Best Evaluation: 1.065808e+00.
+The Best String:
+\#    0: [       4], [       2], [       1], [       5], [       3], [       0]
+\#    6: [       7], [       6]
+
+ best keff =  1.06416554234  and peak =  2.00346511469
+Elapsed time =  51.1656098366  seconds.
+\# Evaluations =  1990
+***Destroying PGA context***
+***Destroying PGA context***
+***Destroying PGA context***
+***Destroying PGA context***
+***Destroying PGA context***
+\end{Verbatim}
+
+The reference solution for this objective is 1.06611227
+, which was found by directly solving each
+of the \textasciitilde{}80000 possible solutions.  As we can observe, the GA
+does quite well.  The parallel performance is also quite good,
+which makes sense as this problem has a comparitively expensive
+evaluation function.  Note that for \code{np} above 2, PGApack
+uses the master process for communications, and hence \code{np=5}
+has just 4 compute processes.
+
+\includegraphics{slab.png}
 
 
 \chapter{Methods}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.9.5)  4 DEC 2011 10:50
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.9.5)  17 DEC 2011 17:07
 entering extended mode
  %&-line parsing enabled.
 **pypgapack.tex
@@ -942,36 +942,89 @@ Underfull \vbox (badness 10000) detected at line 1214
 Underfull \vbox (badness 10000) detected at line 1214
  []
 
-[19] [20] [21] [22
+[19] [20] [21]
+Underfull \vbox (badness 10000) detected at line 1639
+ []
 
-]
-Chapter 3.
-[23] [24
 
-]
-Chapter 4.
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+[22]
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+[23]
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+[24]
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
 [25]
-LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1353.
- [26] [27] [28
+Underfull \vbox (badness 10000) detected at line 1639
+ []
 
-]
-Chapter 5.
-[29] [30]
-Chapter 6.
-(./pypgapack.ind [31
+
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+[26]
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1639
+ []
+
+[27] [28] <slab.png, id=251, 586.8324pt x 442.2924pt>
+File: slab.png Graphic file (type png)
+ <use slab.png>
+File: slab.png Graphic file (type png)
+
+<use slab.png> [29] [30 <./slab.png>]
+Chapter 3.
+[31
 
 ] [32
 
-] [33
+]
+Chapter 4.
+[33]
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1823.
+ [34] [35] [36
+
+]
+Chapter 5.
+[37] [38]
+Chapter 6.
+(./pypgapack.ind [39
+
+] [40
+
+] [41
 
 
 ]) (./pypgapack.aux) ) 
 Here is how much of TeX's memory you used:
- 8060 strings out of 495061
- 109294 string characters out of 1182622
- 216146 words of memory out of 3000000
- 10957 multiletter control sequences out of 15000+50000
+ 8076 strings out of 495061
+ 109476 string characters out of 1182622
+ 268462 words of memory out of 3000000
+ 10962 multiletter control sequences out of 15000+50000
  63876 words of font info for 80 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
  45i,11n,45p,613b,470s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -983,9 +1036,9 @@ a.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/shar
 e/texmf-texlive/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf-texlive/f
 onts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times
 /utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on pypgapack.pdf (37 pages, 214198 bytes).
+Output written on pypgapack.pdf (45 pages, 255750 bytes).
 PDF statistics:
- 345 PDF objects out of 1000 (max. 8388607)
- 74 named destinations out of 1000 (max. 500000)
- 121 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 383 PDF objects out of 1000 (max. 8388607)
+ 83 named destinations out of 1000 (max. 500000)
+ 126 words of extra memory for PDF output out of 10000 (max. 10000000)
 

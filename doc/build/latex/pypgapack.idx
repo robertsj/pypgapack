@@ -1,8 +1,8 @@
-\indexentry{PGA (built-in class)|hyperpage}{26}
-\indexentry{\_\_init\_\_() (PGA method)|hyperpage}{26}
-\indexentry{GetIntegerChromosome() (PGA method)|hyperpage}{26}
-\indexentry{GetRealChromosome() (PGA method)|hyperpage}{26}
-\indexentry{SetInitString() (PGA method)|hyperpage}{26}
-\indexentry{SetCrossover() (PGA method)|hyperpage}{27}
-\indexentry{SetMutation() (PGA method)|hyperpage}{27}
-\indexentry{SetEndOfGen() (PGA method)|hyperpage}{27}
+\indexentry{PGA (built-in class)|hyperpage}{34}
+\indexentry{\_\_init\_\_() (PGA method)|hyperpage}{34}
+\indexentry{GetIntegerChromosome() (PGA method)|hyperpage}{34}
+\indexentry{GetRealChromosome() (PGA method)|hyperpage}{34}
+\indexentry{SetInitString() (PGA method)|hyperpage}{34}
+\indexentry{SetCrossover() (PGA method)|hyperpage}{35}
+\indexentry{SetMutation() (PGA method)|hyperpage}{35}
+\indexentry{SetEndOfGen() (PGA method)|hyperpage}{35}

@@ -16,10 +16,11 @@
 \contentsline {section}{\numberline {2.3}Parallel Examples}{14}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Example 8: Parallel MAXBIT}{14}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}Example 9: Parallel Traveling Salesman}{17}{subsection.2.3.2}
-\contentsline {chapter}{\numberline {3}Methods}{23}{chapter.3}
-\contentsline {chapter}{\numberline {4}API Reference}{25}{chapter.4}
-\contentsline {section}{\numberline {4.1}Introduction}{25}{section.4.1}
-\contentsline {section}{\numberline {4.2}pypgapack API}{25}{section.4.2}
-\contentsline {chapter}{\numberline {5}License}{29}{chapter.5}
-\contentsline {chapter}{\numberline {6}Indices and tables}{31}{chapter.6}
-\contentsline {chapter}{Index}{33}{section*.11}
+\contentsline {subsection}{\numberline {2.3.3}Example 10: Optimizing a Slab Reactor}{21}{subsection.2.3.3}
+\contentsline {chapter}{\numberline {3}Methods}{31}{chapter.3}
+\contentsline {chapter}{\numberline {4}API Reference}{33}{chapter.4}
+\contentsline {section}{\numberline {4.1}Introduction}{33}{section.4.1}
+\contentsline {section}{\numberline {4.2}pypgapack API}{33}{section.4.2}
+\contentsline {chapter}{\numberline {5}License}{37}{chapter.5}
+\contentsline {chapter}{\numberline {6}Indices and tables}{39}{chapter.6}
+\contentsline {chapter}{Index}{41}{section*.11}

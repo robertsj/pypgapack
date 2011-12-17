@@ -3238,6 +3238,9 @@ static void endofgen(PGAContext* c)
 
 
 
+#include "mpi4py/mpi4py.h"
+
+
 #include <limits.h>
 #if !defined(SWIG_NO_LLONG_MAX)
 # if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
@@ -3553,6 +3556,25 @@ SWIGINTERNINLINE PyObject *
 SWIG_From_char  (char c) 
 { 
   return SWIG_FromCharPtrAndSize(&c,1);
+}
+
+
+SWIGINTERN int
+SWIG_AsPtr_MPI_Comm (PyObject * input, MPI_Comm **p) {
+  if (input == Py_None) {
+    if (p) *p = 0;
+    return SWIG_OK;
+  } else if (PyObject_TypeCheck(input,&PyMPIComm_Type)) {
+    if (p) *p = PyMPIComm_Get(input);
+    return SWIG_OK;
+  } else {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(input,&argp,SWIGTYPE_p_MPI_Comm, 0);
+    if (!SWIG_IsOK(res)) return res;
+    if (!argp) return SWIG_ValueError;
+    if (p) *p = static_cast< MPI_Comm* >(argp);
+    return SWIG_OK;
+  }
 }
 
 
@@ -8803,8 +8825,6 @@ SWIGINTERN PyObject *_wrap_PGA_UpdateGeneration(PyObject *SWIGUNUSEDPARM(self), 
   MPI_Comm arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
@@ -8815,17 +8835,13 @@ SWIGINTERN PyObject *_wrap_PGA_UpdateGeneration(PyObject *SWIGUNUSEDPARM(self), 
   }
   arg1 = reinterpret_cast< PGA * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_MPI_Comm,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "PGA_UpdateGeneration" "', argument " "2"" of type '" "MPI_Comm""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "PGA_UpdateGeneration" "', argument " "2"" of type '" "MPI_Comm""'");
-    } else {
-      MPI_Comm * temp = reinterpret_cast< MPI_Comm * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
+    MPI_Comm *ptr = (MPI_Comm *)0;
+    int res = SWIG_AsPtr_MPI_Comm(obj1, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "PGA_UpdateGeneration" "', argument " "2"" of type '" "MPI_Comm""'"); 
     }
+    arg2 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
   }
   (arg1)->UpdateGeneration(arg2);
   resultobj = SWIG_Py_Void();
@@ -11077,8 +11093,6 @@ SWIGINTERN PyObject *_wrap_PGA_Done(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   MPI_Comm arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   int result;
@@ -11090,17 +11104,13 @@ SWIGINTERN PyObject *_wrap_PGA_Done(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   }
   arg1 = reinterpret_cast< PGA * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_MPI_Comm,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "PGA_Done" "', argument " "2"" of type '" "MPI_Comm""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "PGA_Done" "', argument " "2"" of type '" "MPI_Comm""'");
-    } else {
-      MPI_Comm * temp = reinterpret_cast< MPI_Comm * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
+    MPI_Comm *ptr = (MPI_Comm *)0;
+    int res = SWIG_AsPtr_MPI_Comm(obj1, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "PGA_Done" "', argument " "2"" of type '" "MPI_Comm""'"); 
     }
+    arg2 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
   }
   result = (int)(arg1)->Done(arg2);
   resultobj = SWIG_From_int(static_cast< int >(result));
@@ -12283,8 +12293,6 @@ SWIGINTERN PyObject *_wrap_PGA_Evaluate(PyObject *SWIGUNUSEDPARM(self), PyObject
   MPI_Comm arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
@@ -12295,17 +12303,13 @@ SWIGINTERN PyObject *_wrap_PGA_Evaluate(PyObject *SWIGUNUSEDPARM(self), PyObject
   }
   arg1 = reinterpret_cast< PGA * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_MPI_Comm,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "PGA_Evaluate" "', argument " "2"" of type '" "MPI_Comm""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "PGA_Evaluate" "', argument " "2"" of type '" "MPI_Comm""'");
-    } else {
-      MPI_Comm * temp = reinterpret_cast< MPI_Comm * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
+    MPI_Comm *ptr = (MPI_Comm *)0;
+    int res = SWIG_AsPtr_MPI_Comm(obj1, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "PGA_Evaluate" "', argument " "2"" of type '" "MPI_Comm""'"); 
     }
+    arg2 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
   }
   PGA_PyEvaluate(arg1,arg2);
   resultobj = SWIG_Py_Void();
@@ -13406,6 +13410,14 @@ SWIG_init(void) {
   
   
   import_array();
+  
+  
+  if (import_mpi4py() < 0)
+#if PY_VERSION_HEX >= 0x03000000
+  return NULL;
+#else
+  return;
+#endif
   
   SWIG_Python_SetConstant(d, "PGA_DATATYPE_BINARY",SWIG_From_int(static_cast< int >(PGA::DATATYPE_BINARY)));
   SWIG_Python_SetConstant(d, "PGA_DATATYPE_INTEGER",SWIG_From_int(static_cast< int >(PGA::DATATYPE_INTEGER)));

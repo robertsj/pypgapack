@@ -245,6 +245,7 @@ the following output (last several lines):
 
 .. literalinclude:: ../../examples/output/example09_ref_np_1
    :lines: 1741-
+
 Running it using ``mpirun -np 6 python example09.py`` yields 
 the following output (last several lines):
 
@@ -261,3 +262,70 @@ just not very good.  Also compare the mean and standard
 deviation to the cited 829.00 and 72.69.  The parallel results
 are much closer, which may be a fluke, but it may be worth 
 investigating.
+
+Example 10: Optimizing a Slab Reactor
+"""""""""""""""""""""""""""""""""""""
+
+In this problem, the goal is to optimize a "slab reactor".  While 
+the physics is out of our scope, the essential idea is as 
+follows.  We have 8 slabs, each 20 cm thick, and each of a 
+different "fuel".  These slabs are situated together in some
+pattern.  The pattern is surrounded on either side by water,
+and beyond the right side water is vacuum while on the left
+side is an effective mirror, i.e. what goes in must return.
+This definition makes it so the sequence [0,1,...,7] is 
+different from [7,...,1,0].  What we want to do is to maximize
+the multiplication factor "keff" (which is related to how long
+the reactor could produce energy before needing more fuel)
+and make the power distribution as flat as possible (which
+in real reactors is related to several important safety
+margins).  The latter is quantified by the "peaking factor",
+defined as the maximum assembly power divided by the average
+power of all assemblies, and we seek to minimize this.  The 
+objective function is a weighted sum of these objectives.  
+
+The crossover used is the heuristic tie-breaking crossover
+(HTBX) described in Carter, *Advances in Nuclear Science and 
+Technology*., **25**, (1997).  The basic idea is similar
+to the TBX operator of the TSP examples but includes extra
+problem information, in this case the "reactivity" of the fuel
+as quantified by "k-infinity".  Basically, a more "reactive"
+fuel produces more neutrons with time, or, in other words, 
+contributes more to the energy production of the reactor.
+Because of the way the materials are ordered in this example,
+they are already sorted by reactivity.  Hence, TBX and HTBX
+are identical in implementation for this case.
+
+We run the problem over 50 generations and with a population
+of size 50.  We employ a rather elitist strategy, replacing 
+40 strings each generation.  We also disallow identical strings.
+
+.. literalinclude:: ../../examples/example10.py
+
+Running it using ``mpirun -np 1 python example10.py`` yields 
+the following output:
+
+.. literalinclude:: ../../examples/output/example10_ref_np_1
+
+Running it using ``mpirun -np 2 python example10.py`` yields 
+the following output:
+
+.. literalinclude:: ../../examples/output/example10_ref_np_2
+
+Running it using ``mpirun -np 5 python example10.py`` yields 
+the following output:
+
+.. literalinclude:: ../../examples/output/example10_ref_np_5
+
+The reference solution for this objective is 1.06611227 
+, which was found by directly solving each
+of the ~80000 possible solutions.  As we can observe, the GA
+does quite well.  The parallel performance is also quite good, 
+which makes sense as this problem has a comparitively expensive
+evaluation function.  Note that for ``np`` above 2, PGApack
+uses the master process for communications, and hence ``np=5``
+has just 4 compute processes.
+
+.. image:: _static/slab.png
+
+

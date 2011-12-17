@@ -1,0 +1,20 @@
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.060239e+00
+Iter #     Field      Value
+20         Best       1.065283e+00
+Iter #     Field      Value
+30         Best       1.065808e+00
+Iter #     Field      Value
+40         Best       1.065808e+00
+Iter #     Field      Value
+50         Best       1.065808e+00
+The Best Evaluation: 1.065808e+00.
+The Best String:
+#    0: [       4], [       2], [       1], [       5], [       3], [       0]
+#    6: [       7], [       6]
+
+ best keff =  1.06416554234  and peak =  2.00346511469
+Elapsed time =  179.573677063  seconds.
+# Evaluations =  1990
+***Destroying PGA context***
