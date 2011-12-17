@@ -1610,6 +1610,794 @@ deviation to the cited 829.00 and 72.69.  The parallel results
 are much closer, which may be a fluke, but it may be worth
 investigating.</p>
 </div>
+<div class="section" id="example-10-optimizing-a-slab-reactor">
+<h3>Example 10: Optimizing a Slab Reactor<a class="headerlink" href="#example-10-optimizing-a-slab-reactor" title="Permalink to this headline">¶</a></h3>
+<p>In this problem, the goal is to optimize a &#8220;slab reactor&#8221;.  While
+the physics is out of our scope, the essential idea is as
+follows.  We have 8 slabs, each 20 cm thick, and each of a
+different &#8220;fuel&#8221;.  These slabs are situated together in some
+pattern.  The pattern is surrounded on either side by water,
+and beyond the right side water is vacuum while on the left
+side is an effective mirror, i.e. what goes in must return.
+This definition makes it so the sequence [0,1,...,7] is
+different from [7,...,1,0].  What we want to do is to maximize
+the multiplication factor &#8220;keff&#8221; (which is related to how long
+the reactor could produce energy before needing more fuel)
+and make the power distribution as flat as possible (which
+in real reactors is related to several important safety
+margins).  The latter is quantified by the &#8220;peaking factor&#8221;,
+defined as the maximum assembly power divided by the average
+power of all assemblies, and we seek to minimize this.  The
+objective function is a weighted sum of these objectives.</p>
+<p>The crossover used is the heuristic tie-breaking crossover
+(HTBX) described in Carter, <em>Advances in Nuclear Science and
+Technology</em>., <strong>25</strong>, (1997).  The basic idea is similar
+to the TBX operator of the TSP examples but includes extra
+problem information, in this case the &#8220;reactivity&#8221; of the fuel
+as quantified by &#8220;k-infinity&#8221;.  Basically, a more &#8220;reactive&#8221;
+fuel produces more neutrons with time, or, in other words,
+contributes more to the energy production of the reactor.
+Because of the way the materials are ordered in this example,
+they are already sorted by reactivity.  Hence, TBX and HTBX
+are identical in implementation for this case.</p>
+<p>We run the problem over 50 generations and with a population
+of size 50.  We employ a rather elitist strategy, replacing
+40 strings each generation.  We also disallow identical strings.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331</pre></div></td><td class="code"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pypgapack/examples/example10.py  --  optimize a reflected 8 slab reactor</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pypgapack</span> <span class="kn">import</span> <span class="n">PGA</span>
+<span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">factorial</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rc</span>
+<span class="n">rc</span><span class="p">(</span><span class="s">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">rc</span><span class="p">(</span><span class="s">&#39;font&#39;</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s">&#39;serif&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyPGA</span><span class="p">(</span><span class="n">PGA</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    Derive our own class from PGA.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Minimize peaking and maximize keff using weighted objective.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span> 
+        <span class="n">keff</span><span class="p">,</span> <span class="n">peak</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">pattern</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">peak</span> <span class="o">&gt;</span> <span class="mf">1.8</span> <span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">peak</span> <span class="o">-</span> <span class="mf">1.8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evals</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">keff</span> <span class="o">-</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">delta</span>
+    
+    <span class="k">def</span> <span class="nf">flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Solve for the flux via simple mesh-centered finite differences.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns keff and the maximum-to-average assembly-averaged </span>
+<span class="sd">        fission density ratio. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Coarse mesh boundaries.  (Specific to n=8!!)</span>
+        <span class="n">coarse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">20.</span><span class="p">,</span><span class="mf">40.</span><span class="p">,</span><span class="mf">60.</span><span class="p">,</span><span class="mf">80.</span><span class="p">,</span><span class="mf">100.</span><span class="p">,</span><span class="mf">120.</span><span class="p">,</span><span class="mf">140.</span><span class="p">,</span><span class="mf">160.</span><span class="p">,</span><span class="mf">180.</span><span class="p">,</span><span class="mf">200.</span><span class="p">])</span>
+        <span class="c"># Fine meshes per coarse mesh.</span>
+        <span class="n">fine</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">/</span> <span class="n">fine</span>
+        <span class="c"># Material map (simplifies coefficients)</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">fine</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coarse</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">fine</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span> <span class="c"># reflector</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">fine</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_slabs</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">mat</span><span class="p">[</span><span class="n">j</span><span class="p">:(</span><span class="n">j</span> <span class="o">+</span> <span class="n">fine</span><span class="p">)]</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="c"># one of the slabs</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="n">fine</span> 
+        <span class="n">mat</span><span class="p">[</span><span class="n">j</span><span class="p">:(</span><span class="n">j</span> <span class="o">+</span> <span class="n">fine</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">10</span> <span class="c"># reflector   </span>
+        <span class="c"># System size </span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">fine</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coarse</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c"># Materials</span>
+        <span class="n">D</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">()</span>
+        <span class="c"># Coefficient Matrix (just diagonals) and Vectors</span>
+        <span class="n">AD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">AL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">AU</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">nufission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">scatter12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
+            <span class="c"># reflective left boundary</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span> 
+            <span class="n">AU</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">/</span> \
+                       <span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="n">dx</span><span class="p">)</span>
+            <span class="n">AD</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">AU</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> \
+                       <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">dx</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">b</span><span class="p">))</span> <span class="o">+</span> \
+                       <span class="n">dx</span> <span class="o">*</span> <span class="n">R</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> 
+            <span class="n">nufission</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">F</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">scatter12</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="c"># vacuum right boundary</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span> 
+            <span class="n">AL</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]]</span> <span class="o">/</span> \
+                           <span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]]</span> <span class="o">*</span> <span class="n">dx</span><span class="p">)</span>
+            <span class="n">AD</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">AL</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">+</span> \
+                        <span class="mf">2.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> \
+                       <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">+</span> \
+                       <span class="n">dx</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">b</span><span class="p">))</span> <span class="o">+</span> \
+                       <span class="n">dx</span> <span class="o">*</span> <span class="n">R</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span>
+            <span class="n">nufission</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">F</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span>
+            <span class="n">scatter12</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">mat</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span>
+            <span class="c"># internal cells                                              </span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">AL</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">]]</span> <span class="o">/</span> \
+                               <span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="n">dx</span><span class="p">)</span>
+                <span class="n">AU</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">]]</span> <span class="o">/</span> \
+                           <span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">D</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="n">dx</span><span class="p">)</span>   
+                
+                <span class="n">AD</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">AL</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">+</span> <span class="n">AU</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">g</span><span class="p">])</span> <span class="o">+</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">R</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="n">nufission</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">F</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">mat</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="n">scatter12</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">mat</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="c"># Initiate the fluxes.</span>
+        <span class="n">phi1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">phi2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="c"># Use a guess for fission density based on fission cross section.</span>
+        <span class="n">fission_density</span> <span class="o">=</span> <span class="n">nufission</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c"># and normalize it.</span>
+        <span class="n">fission_density</span> <span class="o">=</span> <span class="n">fission_density</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fission_density</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>                          
+        <span class="n">fission_density0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="c"># Initialize the downscatter source.</span>
+        <span class="n">scatter_source</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="c"># Initial eigenvalue guess.</span>
+        <span class="n">keff</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">keff0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c"># Set errors.</span>
+        <span class="n">errorfd</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">errork</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">errorfd</span> <span class="o">&gt;</span> <span class="mf">1e-5</span> <span class="ow">and</span> <span class="n">errork</span> <span class="o">&gt;</span> <span class="mf">1e-5</span> <span class="ow">and</span> <span class="n">it</span> <span class="o">&lt;</span> <span class="mi">200</span><span class="p">)</span> <span class="p">:</span>
+            <span class="c"># Solve fast group.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tridiag</span><span class="p">(</span><span class="n">AU</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">AL</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">AD</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> \
+                         <span class="n">fission_density</span> <span class="o">/</span> <span class="n">keff</span><span class="p">,</span> <span class="n">phi1</span><span class="p">)</span>
+            <span class="c"># Compute down scatter source.</span>
+            <span class="n">scatter_source</span> <span class="o">=</span> <span class="n">phi1</span> <span class="o">*</span> <span class="n">scatter12</span>
+            <span class="c"># Solve thermal group.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tridiag</span><span class="p">(</span><span class="n">AU</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">AL</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">AD</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">scatter_source</span><span class="p">,</span> <span class="n">phi2</span><span class="p">)</span>
+            <span class="c"># Keep old values.</span>
+            <span class="n">fission_density0</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">fission_density</span>
+            <span class="n">keff0</span> <span class="o">=</span> <span class="n">keff</span>
+            <span class="c"># Update density and eigenvalue</span>
+            <span class="n">fission_density</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">phi1</span> <span class="o">*</span> <span class="n">nufission</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> \
+                                 <span class="n">phi2</span> <span class="o">*</span> <span class="n">nufission</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> 
+            <span class="n">keff</span> <span class="o">=</span> <span class="n">keff0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fission_density</span><span class="p">)</span> <span class="o">/</span> \
+                             <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fission_density0</span><span class="p">)</span>
+            <span class="c"># Update errors.  Use Linf norm on density.</span>
+            <span class="n">errorfd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fission_density</span> <span class="o">-</span> <span class="n">fission_density0</span><span class="p">))</span>
+            <span class="n">errork</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">keff</span> <span class="o">-</span> <span class="n">keff0</span><span class="p">)</span>
+            <span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c"># Now we average the fission density over each fueled coarse mesh.</span>
+        <span class="n">slab_fission_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_slabs</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">fine</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_slabs</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">slab_fission_density</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">fission_density</span><span class="p">[</span><span class="n">j</span><span class="p">:(</span><span class="n">j</span> <span class="o">+</span> <span class="n">fine</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="n">fine</span> 
+        <span class="n">mean_fission_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">fission_density</span><span class="p">)</span>  
+        <span class="n">peaking</span> <span class="o">=</span> <span class="n">slab_fission_density</span> <span class="o">/</span> <span class="n">mean_fission_density</span>  
+        <span class="n">max_peaking</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">peaking</span><span class="p">)</span>   
+        <span class="k">return</span> <span class="n">keff</span><span class="p">,</span> <span class="n">max_peaking</span>
+        
+    <span class="k">def</span> <span class="nf">tridiag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Tridiagonal solver.  </span>
+<span class="sd">        </span>
+<span class="sd">        This assumes vectors U, L, and D are of the same length.  The right</span>
+<span class="sd">        hand side is f and the solved unknowns are returned in y.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>   
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">materials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        10 fuels with one 1 reflector by row.  Represents burnup of 0, 5, </span>
+<span class="sd">        10, 15, 20, 25, 30, 35, 40, and 45 MWd/kg for one assembly type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>                                                  \
+            <span class="p">[</span><span class="mf">1.4402e+00</span><span class="p">,</span> <span class="mf">1.4429e+00</span><span class="p">,</span> <span class="mf">1.4453e+00</span><span class="p">,</span> <span class="mf">1.4467e+00</span><span class="p">,</span> <span class="mf">1.4476e+00</span><span class="p">,</span>\
+             <span class="mf">1.4483e+00</span><span class="p">,</span> <span class="mf">1.4489e+00</span><span class="p">,</span> <span class="mf">1.4496e+00</span><span class="p">,</span> <span class="mf">1.4507e+00</span><span class="p">,</span> <span class="mf">1.4525e+00</span><span class="p">,</span>\
+             <span class="mf">1.3200e+00</span><span class="p">],</span>                                               \
+            <span class="p">[</span><span class="mf">3.7939e-01</span><span class="p">,</span> <span class="mf">3.7516e-01</span><span class="p">,</span> <span class="mf">3.7233e-01</span><span class="p">,</span> <span class="mf">3.7045e-01</span><span class="p">,</span> <span class="mf">3.6913e-01</span><span class="p">,</span>\
+             <span class="mf">3.6818e-01</span><span class="p">,</span> <span class="mf">3.6749e-01</span><span class="p">,</span> <span class="mf">3.6699e-01</span><span class="p">,</span> <span class="mf">3.6649e-01</span><span class="p">,</span> <span class="mf">3.6615e-01</span><span class="p">,</span>\
+             <span class="mf">2.6720e-01</span><span class="p">]])</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>                                                  \
+            <span class="p">[</span><span class="mf">2.5800e-02</span><span class="p">,</span> <span class="mf">2.5751e-02</span><span class="p">,</span> <span class="mf">2.5755e-02</span><span class="p">,</span> <span class="mf">2.5840e-02</span><span class="p">,</span> <span class="mf">2.5958e-02</span><span class="p">,</span>\
+             <span class="mf">2.6090e-02</span><span class="p">,</span> <span class="mf">2.6226e-02</span><span class="p">,</span> <span class="mf">2.6362e-02</span><span class="p">,</span> <span class="mf">2.6559e-02</span><span class="p">,</span> <span class="mf">2.6802e-02</span><span class="p">,</span>\
+             <span class="mf">2.5700e-02</span><span class="p">],</span>                                               \
+            <span class="p">[</span><span class="mf">1.1817e-01</span><span class="p">,</span> <span class="mf">1.2301e-01</span><span class="p">,</span> <span class="mf">1.2306e-01</span><span class="p">,</span> <span class="mf">1.2277e-01</span><span class="p">,</span> <span class="mf">1.2223e-01</span><span class="p">,</span>\
+             <span class="mf">1.2136e-01</span><span class="p">,</span> <span class="mf">1.2017e-01</span><span class="p">,</span> <span class="mf">1.1871e-01</span><span class="p">,</span> <span class="mf">1.1622e-01</span><span class="p">,</span> <span class="mf">1.1275e-01</span><span class="p">,</span>\
+             <span class="mf">5.1500e-02</span><span class="p">]])</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>                                                  \
+            <span class="p">[</span><span class="mf">7.9653e-03</span><span class="p">,</span> <span class="mf">7.6255e-03</span><span class="p">,</span> <span class="mf">7.2724e-03</span><span class="p">,</span> <span class="mf">6.9344e-03</span><span class="p">,</span> <span class="mf">6.6169e-03</span><span class="p">,</span>\
+             <span class="mf">6.3189e-03</span><span class="p">,</span> <span class="mf">6.0453e-03</span><span class="p">,</span> <span class="mf">5.7908e-03</span><span class="p">,</span> <span class="mf">5.4413e-03</span><span class="p">,</span> <span class="mf">5.0379e-03</span><span class="p">,</span>\
+             <span class="mf">0.00000000</span><span class="p">],</span>                                               \
+            <span class="p">[</span><span class="mf">1.6359e-01</span><span class="p">,</span> <span class="mf">1.7301e-01</span><span class="p">,</span> <span class="mf">1.7681e-01</span><span class="p">,</span> <span class="mf">1.7634e-01</span><span class="p">,</span> <span class="mf">1.7355e-01</span><span class="p">,</span>\
+             <span class="mf">1.6931e-01</span><span class="p">,</span> <span class="mf">1.6424e-01</span><span class="p">,</span> <span class="mf">1.5869e-01</span><span class="p">,</span> <span class="mf">1.5005e-01</span><span class="p">,</span> <span class="mf">1.3894e-01</span><span class="p">,</span>\
+             <span class="mf">0.00000000</span><span class="p">]])</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>                                                   \
+            <span class="p">[</span><span class="mf">1.5204e-02</span><span class="p">,</span> <span class="mf">1.5152e-02</span><span class="p">,</span> <span class="mf">1.4958e-02</span><span class="p">,</span> <span class="mf">1.4828e-02</span><span class="p">,</span> <span class="mf">1.4744e-02</span><span class="p">,</span>\
+             <span class="mf">1.4691e-02</span><span class="p">,</span> <span class="mf">1.4652e-02</span><span class="p">,</span> <span class="mf">1.4626e-02</span><span class="p">,</span> <span class="mf">1.4601e-02</span><span class="p">,</span> <span class="mf">1.4587e-02</span><span class="p">,</span>\
+              <span class="mf">2.3100e-02</span><span class="p">])</span>                   
+        <span class="k">return</span> <span class="n">D</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">S</span>
+    
+    <span class="k">def</span> <span class="nf">kinf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute kinf for each slab.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">D</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>   
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">k</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> 
+        <span class="k">return</span> <span class="n">k</span>
+            
+    <span class="k">def</span> <span class="nf">htbx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Heuristic tie-breaking cross-over.  See Carter for details. Actually, </span>
+<span class="sd">        for this problem, HTBX is equivalent to TBX, since the materials are </span>
+<span class="sd">        already ordered by reactivity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Grab the city id&#39;s.</span>
+        <span class="n">paren1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
+        <span class="n">paren2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">pop1</span><span class="p">)</span>
+        <span class="n">child1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>
+        <span class="n">child2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)</span>       
+        <span class="c"># Copy the parents to temporary vector for manipulation.</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetStringLength</span><span class="p">()</span>
+        <span class="n">parent1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">parent2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paren1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">paren2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>               
+        <span class="c"># Code the parents using &quot;position listing&quot;.</span>
+        <span class="n">code1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">code2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">code1</span><span class="p">[</span><span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">code2</span><span class="p">[</span><span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c"># Randomly choose two cross-over points. </span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">point1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">point2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span> 
+        <span class="c"># Exchange all alleles between the two points.</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">point2</span> <span class="o">-</span> <span class="n">point1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">point1</span><span class="p">,</span> <span class="n">point2</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">point1</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">point1</span><span class="p">]</span> 
+        <span class="c"># Generate a cross-over map, a random ordering of the 0,1,...,n-1</span>
+        <span class="n">crossovermap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> 
+        <span class="c"># Multiply each allele of the strung by n and add the map.</span>
+        <span class="n">parent1</span> <span class="o">=</span> <span class="n">parent1</span> <span class="o">*</span> <span class="n">n</span> <span class="o">+</span> <span class="n">crossovermap</span>
+        <span class="n">parent2</span> <span class="o">=</span> <span class="n">parent2</span> <span class="o">*</span> <span class="n">n</span> <span class="o">+</span> <span class="n">crossovermap</span>
+        <span class="c"># Replace the lowest allele by 0, the next by 1, up to n-1.  Here,</span>
+        <span class="c">#   we sort the parents first, and then for each element, find</span>
+        <span class="c">#   where the increasing values are found in the original.  There</span>
+        <span class="c">#   is probably a simpler set of functions built in somewhere.</span>
+        <span class="n">sort1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">parent1</span><span class="p">)</span>
+        <span class="n">sort2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">parent2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">parent1</span> <span class="o">==</span> <span class="n">sort1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">parent1</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">parent2</span> <span class="o">==</span> <span class="n">sort2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">parent2</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>   
+        <span class="c"># Map the string back to elements.  These are the offspring.</span>
+        <span class="n">tempchild1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">tempchild2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tempchild1</span><span class="p">[</span><span class="n">parent1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">tempchild2</span><span class="p">[</span><span class="n">parent2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>            
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">child1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tempchild1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">child2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tempchild2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>    
+                
+    <span class="k">def</span> <span class="nf">eog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log some data for each generation. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">best</span>                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetBestIndex</span><span class="p">(</span><span class="n">PGA</span><span class="o">.</span><span class="n">OLDPOP</span><span class="p">)</span>
+        <span class="n">bestpattern</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">OLDPOP</span><span class="p">)</span>
+        <span class="nb">iter</span>                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetGAIterValue</span><span class="p">()</span>
+        <span class="n">keff</span><span class="p">,</span> <span class="n">peak</span>          <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">flux</span><span class="p">(</span><span class="n">bestpattern</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">besteval</span><span class="p">[</span><span class="nb">iter</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetEvaluation</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">OLDPOP</span><span class="p">)</span>                                                
+        <span class="bp">self</span><span class="o">.</span><span class="n">bestkeff</span><span class="p">[</span><span class="nb">iter</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">keff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bestpeak</span><span class="p">[</span><span class="nb">iter</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">peak</span>        
+                                   
+<span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>           <span class="c"># Get the communicator.</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>          <span class="c"># Get my rank.  </span>
+<span class="n">size</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+<span class="n">t_start</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>           <span class="c"># Start the clock.                                             </span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>                           <span class="c"># Number of fueled slabs (1-10)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">MyPGA</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">DATATYPE_INTEGER</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetRandomSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                    <span class="c"># Set seed for verification.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                       <span class="c"># Do the same with Numpy.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetIntegerInitPermute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>     <span class="c"># Start with random permutations. </span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetPopSize</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>                      <span class="c"># Large enough to see some success.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetNumReplaceValue</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>              <span class="c"># Replace most of them -- elitist.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMaxGAIterValue</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>               <span class="c"># Small number for output.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetCrossover</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">htbx</span><span class="p">)</span>              <span class="c"># Set a cross-over operation.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetEndOfGen</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">eog</span><span class="p">)</span>                <span class="c"># End of generation info</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetMutation</span><span class="p">(</span><span class="n">PGA</span><span class="o">.</span><span class="n">MUTATION_PERMUTE</span><span class="p">)</span>   <span class="c"># Mutate by permutation.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetNoDuplicatesFlag</span><span class="p">(</span><span class="n">PGA</span><span class="o">.</span><span class="n">TRUE</span><span class="p">)</span>       <span class="c"># Keep no duplicate patterns.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">SetUp</span><span class="p">()</span>                             <span class="c"># Internal allocations, etc.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">number_slabs</span> <span class="o">=</span> <span class="n">n</span>                    <span class="c"># Must be set to string size.</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">evals</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">besteval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">51</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">bestkeff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">51</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">bestpeak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">51</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">Run</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">rank</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">opt</span><span class="o">.</span><span class="n">evals</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
+    <span class="n">comm</span><span class="o">.</span><span class="n">Send</span><span class="p">([</span><span class="n">evals</span><span class="p">,</span><span class="n">MPI</span><span class="o">.</span><span class="n">INT</span><span class="p">],</span> <span class="n">dest</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="k">else</span> <span class="p">:</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="s">&#39;i&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">comm</span><span class="o">.</span><span class="n">Recv</span><span class="p">([</span><span class="n">evals</span><span class="p">,</span><span class="n">MPI</span><span class="o">.</span><span class="n">INT</span><span class="p">],</span> <span class="n">source</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">evals</span> <span class="o">+=</span> <span class="n">evals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+<span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GetBestIndex</span><span class="p">(</span><span class="n">PGA</span><span class="o">.</span><span class="n">OLDPOP</span><span class="p">)</span> <span class="c"># Get the best string</span>
+    <span class="n">bestpattern</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GetIntegerChromosome</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">PGA</span><span class="o">.</span><span class="n">OLDPOP</span><span class="p">)</span>
+    <span class="n">keff</span><span class="p">,</span> <span class="n">peak</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">flux</span><span class="p">(</span><span class="n">bestpattern</span><span class="p">)</span>  <span class="c">#   and its keff and peak</span>
+    <span class="k">print</span> <span class="s">&quot; best keff = &quot;</span><span class="p">,</span> <span class="n">keff</span><span class="p">,</span> <span class="s">&quot; and peak = &quot;</span><span class="p">,</span> <span class="n">peak</span>
+    <span class="n">t_end</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Wtime</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Elapsed time = &quot;</span><span class="p">,</span> <span class="n">t_end</span><span class="o">-</span><span class="n">t_start</span><span class="p">,</span> <span class="s">&quot; seconds.&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;# Evaluations = &quot;</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">evals</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">51</span><span class="p">),</span> <span class="n">opt</span><span class="o">.</span><span class="n">besteval</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span>                          \
+              <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">51</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.06611227</span> <span class="p">,</span> <span class="mf">1.06611227</span><span class="p">]),</span> <span class="s">&#39;g--&#39;</span><span class="p">,</span>\
+              <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c"># Plot the objective as a function of generations</span>
+                    <span class="c">#   against the reference solution.</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Convergence of Objective&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39; generation&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39; objective &#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">((</span><span class="s">&#39;HTBX&#39;</span><span class="p">,</span> <span class="s">&#39;solution&#39;</span><span class="p">),</span><span class="n">loc</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shadow</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+<span class="n">MPI</span><span class="o">.</span><span class="n">Finalize</span><span class="p">()</span>  
+<span class="n">opt</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Running it using <tt class="docutils literal"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">1</span> <span class="pre">python</span> <span class="pre">example10.py</span></tt> yields
+the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.060239e+00
+Iter #     Field      Value
+20         Best       1.065283e+00
+Iter #     Field      Value
+30         Best       1.065808e+00
+Iter #     Field      Value
+40         Best       1.065808e+00
+Iter #     Field      Value
+50         Best       1.065808e+00
+The Best Evaluation: 1.065808e+00.
+The Best String:
+#    0: [       4], [       2], [       1], [       5], [       3], [       0]
+#    6: [       7], [       6]
+
+ best keff =  1.06416554234  and peak =  2.00346511469
+Elapsed time =  179.573677063  seconds.
+# Evaluations =  1990
+***Destroying PGA context***
+</pre>
+</div>
+<p>Running it using <tt class="docutils literal"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">2</span> <span class="pre">python</span> <span class="pre">example10.py</span></tt> yields
+the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.060239e+00
+Iter #     Field      Value
+20         Best       1.065283e+00
+Iter #     Field      Value
+30         Best       1.065808e+00
+Iter #     Field      Value
+40         Best       1.065808e+00
+Iter #     Field      Value
+50         Best       1.065808e+00
+The Best Evaluation: 1.065808e+00.
+The Best String:
+#    0: [       4], [       2], [       1], [       5], [       3], [       0]
+#    6: [       7], [       6]
+
+ best keff =  1.06416554234  and peak =  2.00346511469
+Elapsed time =  108.014204025  seconds.
+# Evaluations =  1990
+***Destroying PGA context***
+***Destroying PGA context***
+</pre>
+</div>
+<p>Running it using <tt class="docutils literal"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">5</span> <span class="pre">python</span> <span class="pre">example10.py</span></tt> yields
+the following output:</p>
+<div class="highlight-python"><pre>***Constructing PGA***
+***Constructing PGA***
+***Constructing PGA***
+***Constructing PGA***
+***Constructing PGA***
+Iter #     Field      Value
+10         Best       1.060239e+00
+Iter #     Field      Value
+20         Best       1.065283e+00
+Iter #     Field      Value
+30         Best       1.065808e+00
+Iter #     Field      Value
+40         Best       1.065808e+00
+Iter #     Field      Value
+50         Best       1.065808e+00
+The Best Evaluation: 1.065808e+00.
+The Best String:
+#    0: [       4], [       2], [       1], [       5], [       3], [       0]
+#    6: [       7], [       6]
+
+ best keff =  1.06416554234  and peak =  2.00346511469
+Elapsed time =  51.1656098366  seconds.
+# Evaluations =  1990
+***Destroying PGA context***
+***Destroying PGA context***
+***Destroying PGA context***
+***Destroying PGA context***
+***Destroying PGA context***
+</pre>
+</div>
+<p>The reference solution for this objective is 1.06611227
+, which was found by directly solving each
+of the ~80000 possible solutions.  As we can observe, the GA
+does quite well.  The parallel performance is also quite good,
+which makes sense as this problem has a comparitively expensive
+evaluation function.  Note that for <tt class="docutils literal"><span class="pre">np</span></tt> above 2, PGApack
+uses the master process for communications, and hence <tt class="docutils literal"><span class="pre">np=5</span></tt>
+has just 4 compute processes.</p>
+<img alt="_images/slab.png" src="_images/slab.png" />
+</div>
 </div>
 </div>
 
@@ -1638,6 +2426,7 @@ investigating.</p>
 <li><a class="reference internal" href="#parallel-examples">Parallel Examples</a><ul>
 <li><a class="reference internal" href="#example-8-parallel-maxbit">Example 8: Parallel MAXBIT</a></li>
 <li><a class="reference internal" href="#example-9-parallel-traveling-salesman">Example 9: Parallel Traveling Salesman</a></li>
+<li><a class="reference internal" href="#example-10-optimizing-a-slab-reactor">Example 10: Optimizing a Slab Reactor</a></li>
 </ul>
 </li>
 </ul>
