@@ -1,0 +1,19 @@
+/*-----------------------------------*-C-*-----------------------------------//
+/*!
+ * \file   pypgapack_config.hh
+ * \author Jeremy Roberts 
+ * \brief  Definitions for pyPGAPACK.
+ */
+//---------------------------------------------------------------------------//
+
+#ifndef PYPGAPACK_CONFIG_HH_
+#define PYPGAPACK_CONFIG_HH_
+
+// Define if compiling with MPI
+#cmakedefine PGAPACK_ENABLE_MPI
+
+#endif // PYPGAPACK_CONFIG_HH_ 
+
+//---------------------------------------------------------------------------//
+//              end of pypgapack_config.hh
+//---------------------------------------------------------------------------//

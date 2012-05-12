@@ -13,6 +13,9 @@
 #include "pgapack.hh"
 %}
 
+// Include configuration
+%include "pypgapack_config.hh"
+
 //////////////////////////////////////////////////////////////////////////////
 // Structures from pgapack.h
 
@@ -388,7 +391,7 @@ static void endofgen(PGAContext* c)
 
 // Interface for Evaluate(...).  
 
-#ifdef PARALLEL
+#ifdef PGAPACK_ENABLE_MPI
 %include mpi4py/mpi4py.i
 %mpi4py_typemap(Comm, MPI_Comm);
 #endif

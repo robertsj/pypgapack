@@ -1,0 +1,23 @@
+/*-----------------------------------*-C-*-----------------------------------//
+/*!
+ * \file   pgapack_config.h.in
+ * \author Jeremy Roberts 
+ * \brief  Definitions for PGAPACK.
+ */
+//---------------------------------------------------------------------------//
+
+#ifndef PGAPACK_CONFIG_H_
+#define PGAPACK_CONFIG_H_
+
+// Define if optimized
+#cmakedefine OPTIMIZE
+// Define if compiling with MPI
+#cmakedefine PGAPACK_ENABLE_MPI
+// 32/64 depending on machine
+#cmakedefine WL @WL@
+
+#endif // PGAPACK_CONFIG_H_ 
+
+//---------------------------------------------------------------------------//
+//              end of serment_config.h.in
+//---------------------------------------------------------------------------//

@@ -72,7 +72,7 @@ def test(index) :
                 n += 1
         n += 1
 
-n = 3 # number of examples so far
+n = 6 # number of examples so far
 
 for i in range(1, n + 1) :
     if i < 10 :

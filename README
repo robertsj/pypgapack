@@ -11,31 +11,45 @@ doc/
   is lightly documented, and the user is urged to read the PGAPack
   documentation for more details.
 pypgapack/
-  Contains the sources and a simple build script for creating the 
+  Contains the sources and other files needed for creating the 
   Python module and associated documentation.  
-patch/
-  Contains a few patches for the PGAPack build system to enable building
-  a shared library and using C++.
+pypgapack/
+  Contains the PGAPack sources.  The PGAPack library is built within
+  the CMake framework of pypgapack.  Hence, the older build system, 
+  while present, is not used.  Two slight modifications were made.  Now
+  a configuration header is used based on CMake arguments, and the 
+  pgapack.h header was made safe for use in C++ code.
 examples/
-  Contains several examples illustrating pypgapack.
+  Contains several examples illustrating pypgapack.  Run the script
+  "run_examples.py" to verify against some reference output.
 
 INSTALLATION
 
-You *must* have a *shared* version of the PGAPack library installed.  You 
-can get the source from:
+CMake is used for the build.  The way I like to do the builds is as
+follows.
 
-  http://ftp.mcs.anl.gov/pub/pgapack/
+1. Create a head pypgapack head folder and go there:
+  
+  >>> mkdir /path/to/pypgapack
+  >>> cd /path/to/pypgpapack
 
-PGAPack requires a C compiler and can also be built with MPI.  On the
-other hand, pypgapack requires a C++ compiler.  I've only tested with
-the GNU tool set.  Build and read the documentation for use of the
-included patches to PGAPack to make this part of the build work.  To do
-this, execute
+2. Get the pypgapack repository, naming it source;
 
-  >>> cd ./doc
-  >>> make html; make latex; make latexpdf;
+  >>> git clone git://github.com/robertsj/pypgapack.git source
 
-Thats it!  See the examples for use.
+3. Make a build directory and go there:
+  
+  >>> mkdir build
+  >>> cd build
+
+4. Configure and build.
+
+  >>> cmake -D \
+      CMAKE_INSTALL_PREFIX=/path/to/pypgapack/install \
+      /path/to/pypgapack/source 
+  >>> make install
+
+That's it for the serial build.
 
 
 
